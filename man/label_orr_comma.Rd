@@ -4,10 +4,10 @@
 \alias{label_orr_comma}
 \title{Label ORR Comma}
 \usage{
-label_orr_comma(x)
+label_orr_comma(decimal_places = 1)
 }
 \arguments{
-\item{x}{A numeric vector.}
+\item{decimal_places}{An integer indicating the number of decimal places to be used.}
 }
 \value{
 A character vector. Numbers are shown with comma every 3 digits and

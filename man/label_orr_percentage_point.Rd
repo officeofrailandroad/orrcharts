@@ -4,10 +4,10 @@
 \alias{label_orr_percentage_point}
 \title{Label ORR Percentage Point Change}
 \usage{
-label_orr_percentage_point(x)
+label_orr_percentage_point(decimal_places = 1)
 }
 \arguments{
-\item{x}{A numeric vector.}
+\item{decimal_places}{An integer indicating the number of decimal places to be used.}
 }
 \value{
 A character vector.Numbers are shown to 1 decimal place with a 'pp'

@@ -8,28 +8,27 @@
 #'   data should start at Q1 of a year.
 #' @param bar_colour A hex code or colour name for the fill colour of the bars.
 #'   Defaults to ORR dark blue.
-#' @param y_axis_percent If `TRUE` a '%' symbol is added to the y-axis labels.
 #' @param v_nudge_data_label Shift the last bar data label up or down to dodge
 #'   the neighbouring bars. Negative values move upwards, positive values move
 #'   downwards.
 #' @param h_nudge_x_axis_labels Shift the x-axis labels right or left to be in
 #'   the centre of the years. Typically between -1 and 1. Negative value shifts
 #'   right, positive shifts left.
+#' @param y_axis_labeller A function which creates the y-axis label strings.
+#' @param last_point_labeller A function which create the data label over the
+#'   last point from the value.
 #' @return A ggplot2 bar chart for ORR quarterly bar time series.
 quarterly_bar <- function(
     data,
     filename,
     path = NULL,
     bar_colour = "#253268",
-    y_axis_percent = TRUE,
     v_nudge_data_label = 0,
-    h_nudge_x_axis_labels = 0
+    h_nudge_x_axis_labels = 0,
+    y_axis_labeller = scales::label_percent(scale = 1, accuracy = 1),
+    last_point_labeller = scales::label_percent(scale = 1, accuracy = 0.1)
 ) {
   # Argument assertions
-  assertthat::assert_that(
-    assertthat::is.flag(y_axis_percent),
-    msg = "Argument y_axis_percent expects TRUE or FALSE"
-  )
   assertthat::assert_that(
     assertthat::is.number(v_nudge_data_label),
     assertthat::is.number(h_nudge_x_axis_labels),
@@ -59,27 +58,12 @@ quarterly_bar <- function(
   # Find the key for the last quarter in data set
   last_quarter = max(data$financial_quarter_key, na.rm = TRUE)
 
-  # Set suffix to value labels
-  value_label_suffix <- base::ifelse(y_axis_percent, "%", "")
-
   # data for the data label above the last bar
   label_data <- plot_data %>%
     dplyr::filter(.data$financial_quarter_key == last_quarter) %>%
     dplyr::mutate(
-      label = base::paste(
-        base::format(base::round(.data$value, digits = 1), nsmall = 1),
-        value_label_suffix,
-        sep = ""
-      )
+      label = last_point_labeller(.data$value)
     )
-
-  # y axis labels
-  ## At some point better to pass the labeller as a function argument
-  y_labeller <- base::ifelse(
-    y_axis_percent,
-    scales::label_percent(scale = 1), # add % to value
-    scales::label_comma() # comma seperated
-  )
 
   # x axis plot labels
   plot_x_labels <- plot_data %>%
@@ -116,7 +100,7 @@ quarterly_bar <- function(
     ggplot2::theme_classic(base_family = font_fam) +
     ggplot2::scale_y_continuous(
       breaks = base::seq(from = 0, to = 100, by = 20), # set y-axis breaks to every 20%
-      labels = y_labeller, # show axis labels with % symbol if needed
+      labels = y_axis_labeller, # show axis labels with % symbol if needed
       expand = ggplot2::expansion(mult = c(0,0.05)), # add 5% to top of y axis to make sure 100% shows
       oob = scales::squish,
       name = NULL # remove axis title

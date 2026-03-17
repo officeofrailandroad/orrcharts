@@ -17,8 +17,9 @@
 #' @param right_bar_order_descending `TRUE` or `FALSE`. If `TRUE` both bar
 #'   charts are arranged in descending order of the right-hand bar chart. If
 #'   `FALSE` then ascending.
-#' @param left_bar_labeller,right_bar_labeller Functions which turn data numeric
-#'   values into character labels.
+#' @param left_bar_labeller,right_bar_labeller Functions, for example result of
+#'   a labeller function, which turn data numeric values into character labels.
+#'   See \link[scales]{label_percent}
 side_by_side_bar <- function(
     data,
     filename,
@@ -31,11 +32,9 @@ side_by_side_bar <- function(
     right_bar_colour_positive = "#28994b",
     right_bar_colour_negative = "#B1173B",
     right_bar_order_descending = TRUE,
-    left_bar_labeller = label_orr_comma,
-    right_bar_labeller = label_orr_percent
+    left_bar_labeller = label_orr_comma(),
+    right_bar_labeller = label_orr_percent()
 ) {
-
-
   data <- data[, 1:3]
   colnames(data) <- c("toc", "value", "change")
 

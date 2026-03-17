@@ -4,13 +4,10 @@
 \alias{label_orr_percent}
 \title{Label ORR Percent}
 \usage{
-label_orr_percent(x)
-}
-\arguments{
-\item{x}{A numeric vector.}
+label_orr_percent()
 }
 \value{
-A character vector. Values are shown with a '\%' symbol to zero
+A labeller function. Values are shown with a '\%' symbol to zero
 decimal places unless between 1\% and -1\% and then shown to 1 decimal place.
 }
 \description{
