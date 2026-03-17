@@ -18,8 +18,12 @@ Imports:
     dplyr,
     ggplot2,
     magrittr,
+    rlang,
     scales,
-    showtext
+    showtext,
+    stringr,
+    sysfonts,
+    tidyr
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Suggests: 

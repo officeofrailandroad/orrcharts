@@ -3,6 +3,8 @@
 #'
 #' Side-by-side bar chart to compare changes over time in a metric between TOCs.
 #' @inheritParams ggplot2::ggsave
+#' @param data A data frame with the first 3 columns holding the TOC names or
+#'   y-axis category, the left bar value, the right bar change value.
 #' @param chart_width,chart_height Width and height in inches of the PNG output.
 #' @param left_bar_title,right_bar_title The text which appears above each set
 #'   of bars.
@@ -42,34 +44,34 @@ side_by_side_bar <- function(
     # on argument
     {
       if(right_bar_order_descending)
-        dplyr::arrange(., dplyr::desc(change))
-      else dplyr::arrange(., change)
+        dplyr::arrange(., dplyr::desc(.data$change))
+      else dplyr::arrange(., .data$change)
       } %>%
     # create a variable to sort the bars later
     dplyr::mutate(bar_order = dplyr::row_number()) %>%
     # collapse value and change into single column of numbers for ggplot
-    tidyr::pivot_longer(value:change, names_to = "col") %>%
+    tidyr::pivot_longer(dplyr::all_of(c("value","change")), names_to = "col") %>%
     dplyr::mutate(
-      col = base::factor(col, levels = c("value", "change")),
+      col = base::factor(.data$col, levels = c("value", "change")),
       # Create data labels
       value_label = dplyr::case_when(
-        col == "value" ~ left_bar_labeller(value),
-        col == "change" ~ right_bar_labeller(value),
+        .data$col == "value" ~ left_bar_labeller(.data$value),
+        .data$col == "change" ~ right_bar_labeller(.data$value),
         TRUE ~ ""
       ),
       # Colours for the bars
       value_fill = dplyr::case_when(
-        col == "value" ~ "value",
-        col == "change" & value >= 0 ~ "change_pos",
-        col == "change" & value < 0 ~ "change_neg",
+        .data$col == "value" ~ "value",
+        .data$col == "change" & .data$value >= 0 ~ "change_pos",
+        .data$col == "change" & .data$value < 0 ~ "change_neg",
         TRUE ~ "value"
       )) %>%
-    dplyr::group_by(col) %>%
+    dplyr::group_by(.data$col) %>%
     dplyr::mutate(
       # Figure out the width of the chart in axis units
-      col_min_value = base::min(value, na.rm = TRUE),
-      col_max_value = base::max(value, na.rm = TRUE),
-      col_width = (col_max_value - col_min_value)) %>%
+      col_min_value = base::min(.data$value, na.rm = TRUE),
+      col_max_value = base::max(.data$value, na.rm = TRUE),
+      col_width = (.data$col_max_value - .data$col_min_value)) %>%
     dplyr::ungroup()
 
   # Set font family and size
@@ -96,12 +98,12 @@ side_by_side_bar <- function(
 
 
   plt <- plot_data %>%
-    ggplot2::ggplot(ggplot2::aes(reorder(toc, -bar_order), value)) +
-    ggplot2::geom_col(ggplot2::aes(fill = value_fill)) +
+    ggplot2::ggplot(ggplot2::aes(stats::reorder(.data$toc, -.data$bar_order), .data$value)) +
+    ggplot2::geom_col(ggplot2::aes(fill = .data$value_fill)) +
     ggplot2::geom_text(
       ggplot2::aes(
-        y = col_min_value - 0.1*col_width, # Data labels half width of chart to left
-        label = value_label
+        y = .data$col_min_value - 0.1*.data$col_width, # Data labels half width of chart to left
+        label = .data$value_label
         ),
       family = font_fam,
       size = 0.90*font_size, # Data labels look bigger so small adjustment here
@@ -113,7 +115,7 @@ side_by_side_bar <- function(
     ggplot2::facet_wrap(
       col ~ .,
       scales = "free_x",
-      labeller = ggplot2::labeller(.default = label_value, col = col_titles) # Sets chart titles
+      labeller = ggplot2::labeller(col = col_titles) # Sets chart titles
       ) +
     ggplot2::coord_flip(clip = "off") +
     ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0.3, 0))) +

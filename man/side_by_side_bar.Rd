@@ -21,6 +21,9 @@ side_by_side_bar(
 )
 }
 \arguments{
+\item{data}{A data frame with the first 3 columns holding the TOC names or
+y-axis category, the left bar value, the right bar change value.}
+
 \item{filename}{File name to create on disk.}
 
 \item{path}{Path of the directory to save plot to: \code{path} and \code{filename}

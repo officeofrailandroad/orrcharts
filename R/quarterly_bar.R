@@ -50,10 +50,10 @@ quarterly_bar <- function(
   colnames(data) <- c("financial_quarter_key", "value")
 
   plot_data <- data %>%
-    dplyr::arrange(financial_quarter_key) %>%
+    dplyr::arrange(.data$financial_quarter_key) %>%
     dplyr::mutate(
       bar_number = dplyr::row_number(), # order to plot bars
-      year_label = year_label_from_quarter_key(financial_quarter_key)
+      year_label = year_label_from_quarter_key(.data$financial_quarter_key)
     )
 
   # Find the key for the last quarter in data set
@@ -64,10 +64,10 @@ quarterly_bar <- function(
 
   # data for the data label above the last bar
   label_data <- plot_data %>%
-    dplyr::filter(financial_quarter_key == last_quarter) %>%
+    dplyr::filter(.data$financial_quarter_key == last_quarter) %>%
     dplyr::mutate(
       label = base::paste(
-        base::format(base::round(value, digits = 1), nsmall = 1),
+        base::format(base::round(.data$value, digits = 1), nsmall = 1),
         value_label_suffix,
         sep = ""
       )
@@ -83,7 +83,7 @@ quarterly_bar <- function(
 
   # x axis plot labels
   plot_x_labels <- plot_data %>%
-    dplyr::pull(year_label) %>%
+    dplyr::pull(.data$year_label) %>%
     base::unique() %>%
     base::c("")
 
@@ -101,11 +101,11 @@ quarterly_bar <- function(
     ggplot2::ggplot() +
     ggplot2::coord_cartesian(clip = "off") +
     # bars
-    ggplot2::geom_bar(ggplot2::aes(bar_number, value), stat = "identity", fill = bar_colour) +
+    ggplot2::geom_bar(ggplot2::aes(.data$bar_number, .data$value), stat = "identity", fill = bar_colour) +
     # data label
     ggplot2::geom_text(
       data = label_data,
-      ggplot2::aes(bar_number, value, label = label),
+      ggplot2::aes(.data$bar_number, .data$value, label = .data$label),
       hjust = "center",
       vjust = -1 + v_nudge_data_label, # hover above bar
       family = font_fam,
