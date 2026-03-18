@@ -69,7 +69,7 @@ side_by_side_bar <- function(
     dplyr::group_by(.data$col) %>%
     dplyr::mutate(
       # Figure out the width of the chart in axis units
-      col_min_value = base::min(.data$value, na.rm = TRUE),
+      col_min_value = base::min(0, base::min(.data$value, na.rm = TRUE)),
       col_max_value = base::max(.data$value, na.rm = TRUE),
       col_width = (.data$col_max_value - .data$col_min_value)) %>%
     dplyr::ungroup()
