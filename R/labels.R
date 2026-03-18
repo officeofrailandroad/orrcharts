@@ -7,6 +7,9 @@
 #' @seealso [label_orr_comma()], [label_orr_percentage_point()]
 label_orr_percent <- function() {
   function(x) {
+    if (length(x) == 0) {
+      return(character())
+    }
     base::ifelse(
       x < 1 & x > -1,
       scales::number(x, accuracy = 0.1, suffix = "%"),
