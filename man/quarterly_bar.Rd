@@ -8,9 +8,12 @@ quarterly_bar(
   data,
   filename,
   path = NULL,
+  chart_width = 6.7,
+  chart_height = 3.567,
   bar_colour = "#253268",
   v_nudge_data_label = 0,
   h_nudge_x_axis_labels = 0,
+  y_axis_breaks = ggplot2::waiver(),
   y_axis_labeller = scales::label_percent(scale = 1, accuracy = 1),
   last_point_labeller = scales::label_percent(scale = 1, accuracy = 0.1)
 )
@@ -26,6 +29,8 @@ data should start at Q1 of a year.}
 are combined to create the fully qualified file name. Defaults to the
 working directory.}
 
+\item{chart_width, chart_height}{Width and height in inches of the PNG output}
+
 \item{bar_colour}{A hex code or colour name for the fill colour of the bars.
 Defaults to ORR dark blue.}
 
@@ -36,6 +41,9 @@ downwards.}
 \item{h_nudge_x_axis_labels}{Shift the x-axis labels right or left to be in
 the centre of the years. Typically between -1 and 1. Negative value shifts
 right, positive shifts left.}
+
+\item{y_axis_breaks}{Vector of where to place y-axis breaks. If blank will
+use ggplot2 default.}
 
 \item{y_axis_labeller}{A function which creates the y-axis label strings.}
 

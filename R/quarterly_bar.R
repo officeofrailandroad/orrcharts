@@ -6,6 +6,7 @@
 #' @param data A data frame with 2 columns. The first column should be the
 #'   financial_quarter_key and the second column the value to be plotted. The
 #'   data should start at Q1 of a year.
+#' @param chart_width,chart_height Width and height in inches of the PNG output
 #' @param bar_colour A hex code or colour name for the fill colour of the bars.
 #'   Defaults to ORR dark blue.
 #' @param v_nudge_data_label Shift the last bar data label up or down to dodge
@@ -14,6 +15,8 @@
 #' @param h_nudge_x_axis_labels Shift the x-axis labels right or left to be in
 #'   the centre of the years. Typically between -1 and 1. Negative value shifts
 #'   right, positive shifts left.
+#' @param y_axis_breaks Vector of where to place y-axis breaks. If blank will
+#'   use ggplot2 default.
 #' @param y_axis_labeller A function which creates the y-axis label strings.
 #' @param last_point_labeller A function which create the data label over the
 #'   last point from the value.
@@ -27,6 +30,7 @@ quarterly_bar <- function(
     bar_colour = "#253268",
     v_nudge_data_label = 0,
     h_nudge_x_axis_labels = 0,
+    y_axis_breaks = ggplot2::waiver(),
     y_axis_labeller = scales::label_percent(scale = 1, accuracy = 1),
     last_point_labeller = scales::label_percent(scale = 1, accuracy = 0.1)
 ) {
@@ -101,7 +105,7 @@ quarterly_bar <- function(
     ) +
     ggplot2::theme_classic(base_family = font_fam) +
     ggplot2::scale_y_continuous(
-      breaks = base::seq(from = 0, to = 100, by = 20), # set y-axis breaks to every 20%
+      breaks = y_axis_breaks, # set y-axis breaks to every 20%
       labels = y_axis_labeller, # show axis labels with % symbol if needed
       expand = ggplot2::expansion(mult = c(0,0.05)), # add 5% to top of y axis to make sure 100% shows
       oob = scales::squish,
