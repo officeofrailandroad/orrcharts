@@ -109,9 +109,9 @@ side_by_side_bar <- function(
       size = 0.90*font_size, # Data labels look bigger so small adjustment here
       hjust = "right",
       size.unit = "pt") +
-    ggplot2::geom_hline(yintercept = 0, colour = "black", size = 0.2) + # vertical axis lines
-    ggplot2::geom_vline(xintercept = 0.4, colour = "black", size = 0.2) + # bottom horizontal line
-    ggplot2::geom_vline(xintercept = n_tocs + 0.6, colour = "black", size = 0.2) + # top horizontal line
+    ggplot2::geom_hline(yintercept = 0, colour = "black", linewidth = 0.2) + # vertical axis lines
+    ggplot2::geom_vline(xintercept = 0.4, colour = "black", linewidth = 0.2) + # bottom horizontal line
+    ggplot2::geom_vline(xintercept = n_tocs + 0.6, colour = "black", linewidth = 0.2) + # top horizontal line
     ggplot2::facet_wrap(
       col ~ .,
       scales = "free_x",
