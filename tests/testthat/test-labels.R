@@ -4,7 +4,6 @@ test_that("label_orr_*() create functions", {
   expect_type(label_orr_percentage_point(), "closure")
 })
 
-
 test_that("label_orr_percent creates the expected labeller", {
   lbl_fn <- label_orr_percent()
   expect_equal(lbl_fn(10), "10%")
@@ -16,4 +15,39 @@ test_that("label_orr_percent creates the expected labeller", {
   expect_equal(lbl_fn(-0.3123), "-0.3%")
   expect_equal(lbl_fn(0), "0.0%")
   expect_equal(lbl_fn(c(0, 2, 0.3, 5)), c("0.0%", "2%", "0.3%", "5%"))
+})
+
+test_that("label_orr_comma create the expected labeller", {
+  dp1_fn <- label_orr_comma()
+  dp0_fn <- label_orr_comma(decimal_places = 0)
+  dp2_fn <- label_orr_comma(decimal_places = 2)
+  expect_equal(dp1_fn(1000), "1,000.0")
+  expect_equal(dp1_fn(123), "123.0")
+  expect_equal(dp1_fn(123.456), "123.5")
+  expect_equal(dp1_fn(2.342), "2.3")
+  expect_equal(dp0_fn(4567), "4,567")
+  expect_equal(dp0_fn(78), "78")
+  expect_equal(dp0_fn(6789.012), "6,789")
+  expect_equal(dp0_fn(-123), "-123")
+  expect_equal(dp2_fn(34.567), "34.57")
+  expect_equal(dp2_fn(45678), "45,678.00")
+  expect_equal(dp2_fn(23456789), "23,456,789.00")
+})
+
+test_that("label_orr_percentage_point creates the expected labeller", {
+  dp1_fn <- label_orr_percentage_point()
+  dp0_fn <- label_orr_percentage_point(decimal_places = 0)
+  dp2_fn <- label_orr_percentage_point(decimal_places = 2)
+  expect_equal(dp1_fn(10), "+10.0pp")
+  expect_equal(dp1_fn(3), "+3.0pp")
+  expect_equal(dp1_fn(0), "0.0pp")
+  expect_equal(dp1_fn(-3.456), "-3.5pp")
+  expect_equal(dp1_fn(2.342), "+2.3pp")
+  expect_equal(dp0_fn(456), "+456pp")
+  expect_equal(dp0_fn(-0.12), "0pp")
+  expect_equal(dp0_fn(9.012), "+9pp")
+  expect_equal(dp0_fn(-8.92), "-9pp")
+  expect_equal(dp2_fn(34.567), "+34.57pp")
+  expect_equal(dp2_fn(4.5678), "+4.57pp")
+  expect_equal(dp2_fn(-2.3456789), "-2.35pp")
 })
