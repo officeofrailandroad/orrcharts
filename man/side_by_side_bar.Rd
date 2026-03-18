@@ -12,10 +12,10 @@ side_by_side_bar(
   chart_height = 7.3,
   left_bar_title = "METRIC, TIME PERIOD",
   right_bar_title = "Change from TIME PERIOD",
-  left_bar_colour = "#253268",
-  right_bar_colour_positive = "#28994b",
-  right_bar_colour_negative = "#B1173B",
   right_bar_order_descending = TRUE,
+  left_bar_colour = "#253268",
+  right_bar_colour_positive = ifelse(right_bar_order_descending, "#28994b", "#B1173B"),
+  right_bar_colour_negative = ifelse(right_bar_order_descending, "#B1173B", "#28994b"),
   left_bar_labeller = label_orr_comma(),
   right_bar_labeller = label_orr_percent()
 )
@@ -35,6 +35,10 @@ working directory.}
 \item{left_bar_title, right_bar_title}{The text which appears above each set
 of bars.}
 
+\item{right_bar_order_descending}{\code{TRUE} or \code{FALSE}. If \code{TRUE} both bar
+charts are arranged in descending order of the right-hand bar chart. If
+\code{FALSE} then ascending and default bar colours flip.}
+
 \item{left_bar_colour}{A string hexcode for the colour of the bars in the
 left-hand side bar chart. Default is for ORR dark blue.}
 
@@ -42,10 +46,6 @@ left-hand side bar chart. Default is for ORR dark blue.}
 for the colours of the right-hand side bar chart. \verb{_positive} colours
 positive valued bars and \verb{_negative} colours those below zero. Default is
 for green/red but could also use ORR yellow for both.}
-
-\item{right_bar_order_descending}{\code{TRUE} or \code{FALSE}. If \code{TRUE} both bar
-charts are arranged in descending order of the right-hand bar chart. If
-\code{FALSE} then ascending.}
 
 \item{left_bar_labeller, right_bar_labeller}{Functions, for example result of
 a labeller function, which turn data numeric values into character labels.

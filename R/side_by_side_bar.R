@@ -16,7 +16,7 @@
 #'   for green/red but could also use ORR yellow for both.
 #' @param right_bar_order_descending `TRUE` or `FALSE`. If `TRUE` both bar
 #'   charts are arranged in descending order of the right-hand bar chart. If
-#'   `FALSE` then ascending.
+#'   `FALSE` then ascending and default bar colours flip.
 #' @param left_bar_labeller,right_bar_labeller Functions, for example result of
 #'   a labeller function, which turn data numeric values into character labels.
 #'   See \link[scales]{label_percent}
@@ -29,10 +29,10 @@ side_by_side_bar <- function(
     chart_height = 7.3,
     left_bar_title = "METRIC, TIME PERIOD",
     right_bar_title = "Change from TIME PERIOD",
-    left_bar_colour = "#253268",
-    right_bar_colour_positive = "#28994b",
-    right_bar_colour_negative = "#B1173B",
     right_bar_order_descending = TRUE,
+    left_bar_colour = "#253268",
+    right_bar_colour_positive = ifelse(right_bar_order_descending, "#28994b", "#B1173B"),
+    right_bar_colour_negative = ifelse(right_bar_order_descending, "#B1173B", "#28994b"),
     left_bar_labeller = label_orr_comma(),
     right_bar_labeller = label_orr_percent()
 ) {
@@ -124,7 +124,7 @@ side_by_side_bar <- function(
     ggplot2::guides(fill = "none") + # No fill legend for colours
     ggplot2::theme_classic(base_family = font_fam) +
     ggplot2::theme(
-      text = ggplot2::element_text(family = font_fam, size = font_size),
+      text = ggplot2::element_text(family = font_fam, size = font_size, colour = "black"),
       axis.title = ggplot2::element_blank(),
       axis.text.x = ggplot2::element_blank(),
       axis.ticks = ggplot2::element_blank(),
