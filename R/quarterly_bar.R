@@ -21,6 +21,7 @@
 #' @param last_point_labeller A function which create the data label over the
 #'   last point from the value.
 #' @return A ggplot2 bar chart for ORR quarterly bar time series.
+#' @export
 quarterly_bar <- function(
     data,
     filename,

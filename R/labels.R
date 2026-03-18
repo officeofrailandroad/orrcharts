@@ -5,6 +5,7 @@
 #' @returns A labeller function. Values are shown with a '%' symbol to zero
 #'   decimal places unless between 1% and -1% and then shown to 1 decimal place.
 #' @seealso [label_orr_comma()], [label_orr_percentage_point()]
+#' @export
 label_orr_percent <- function() {
   function(x) {
     if (length(x) == 0) {
@@ -26,6 +27,7 @@ label_orr_percent <- function() {
 #' @returns A character vector. Numbers are shown with comma every 3 digits and
 #'   rounded to 3 significant figures.
 #' @seealso [label_orr_percent()], [label_orr_percentage_point()]
+#' @export
 label_orr_comma <- function(decimal_places = 1) {
   scales::label_comma(accuracy = 1 / (10 ^ decimal_places), scale = 1)
 }
@@ -37,6 +39,7 @@ label_orr_comma <- function(decimal_places = 1) {
 #' @returns A character vector.Numbers are shown to 1 decimal place with a 'pp'
 #'   suffix and +/- prefix.
 #' @seealso [label_orr_percent()], [label_orr_comma()]
+#' @export
 label_orr_percentage_point <- function(decimal_places = 1) {
   scales::label_number(
     accuracy = 1 / (10 ^ decimal_places),

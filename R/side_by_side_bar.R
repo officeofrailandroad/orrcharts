@@ -20,6 +20,7 @@
 #' @param left_bar_labeller,right_bar_labeller Functions, for example result of
 #'   a labeller function, which turn data numeric values into character labels.
 #'   See \link[scales]{label_percent}
+#' @export
 side_by_side_bar <- function(
     data,
     filename,
