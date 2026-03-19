@@ -80,7 +80,7 @@ quarterly_bar <- function(
 
   # y axis limits
   y_limits <- NULL
-  if(class(y_axis_breaks) != "waiver") {
+  if(! methods::is(y_axis_breaks, "waiver")) {
     # If axis breaks are specified, set the max of y axis to the largest break.
     y_limits <- c(0, max(y_axis_breaks))
   }
