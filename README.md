@@ -50,3 +50,25 @@ quarterly_bar(
 ![Quarterly bar time to 3 chart](man/figures/time_to_3_chart.png)
 
 
+### Side-By-Side Bar Charts
+
+Many stats releases use side-by-side bar charts to compare metrics and their from the previous year across categories, such as train operators. 
+
+The `side_by_side_bar` function expects a data frame with 3 columns:
+1. The category, typically train operating company name
+2. The value, which populates the left-hand bars
+3. The change in the value (either in percent or percentage points), which sets the right-hand bars.
+
+```r
+side_by_side_bar(
+  data = toc_time_to_3,
+  filename = "toc_time_to_3.png",
+  left_bar_title = "Time to 3, Oct to Dec 2025", # set the title above left bars
+  right_bar_title = "Change from Oct to Dec 2024", # set the title above right bars
+  left_bar_labeller = scales::label_percent(scale = 1, accuracy = 0.1), # formatter for left data labels
+  right_bar_labeller = label_orr_percentage_point() # formatter for right data labels
+)
+```
+
+![Side by side bar for TOC time to 3](man/figures/toc_time_to_3.png)
+
