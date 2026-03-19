@@ -78,6 +78,13 @@ quarterly_bar <- function(
     base::unique() %>%
     base::c("")
 
+  # y axis limits
+  y_limits <- NULL
+  if(class(y_axis_breaks) != "waiver") {
+    # If axis breaks are specified, set the max of y axis to the largest break.
+    y_limits <- c(0, max(y_axis_breaks))
+  }
+
   # calculate the max number of quarters
   plot_years <- base::length(plot_x_labels) - 1
   max_q <- plot_years * 4
@@ -108,7 +115,8 @@ quarterly_bar <- function(
     ggplot2::scale_y_continuous(
       breaks = y_axis_breaks, # set y-axis breaks to every 20%
       labels = y_axis_labeller, # show axis labels with % symbol if needed
-      expand = ggplot2::expansion(mult = c(0,0.05)), # add 5% to top of y axis to make sure 100% shows
+      limits = y_limits,
+      expand = ggplot2::expansion(mult = c(0,0.0)), # add 5% to top of y axis to make sure 100% shows
       oob = scales::squish,
       name = NULL # remove axis title
     ) +
