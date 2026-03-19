@@ -30,6 +30,7 @@ select t.financial_quarter_key
 from dwh.nr.factv_350_on_time_operator_quarterly t
 where t.operator_name = 'Great Britain'
 and t.financial_quarter_key >= 202020211
+and t.financial_quarter_key <= 202520263
 ```
 
 This data is in the right format to be used by the `quarterly_bar` function. This function outputs a PNG image which holds the chart. The `y_axis_breaks` argument allows the user to specify where y-axis lines should occur, and `y_axis_labeller` expect a function which controls how the axis labels should be displayed.
