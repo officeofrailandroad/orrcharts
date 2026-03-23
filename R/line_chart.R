@@ -16,6 +16,9 @@
 #' @param series_colours Colours for the lines. Defaults to ORR colours.
 #' @param point_shapes The shapes to show on data point per series. See
 #'   [ggplot2::scale_shape()].
+#' @param show_series_labels If `TRUE` chart will display the series labels,
+#'   taken from column names, on the chart. Label colours will match series
+#'   colours.
 #' @param data_labeller Function which controls how the data labels are
 #'   displayed.
 #' @param chart_seed Set random seed for [ggrepel::geom_text_repel()]. `ggrepel`
@@ -38,6 +41,7 @@ line_chart <- function(
     x_axis_labels = NULL,
     y_axis_breaks = ggplot2::waiver(),
     y_axis_labeller = scales::label_comma(),
+    show_series_labels = TRUE,
     data_labeller = label_orr_comma(),
     chart_seed = 101
 ) {
@@ -79,7 +83,11 @@ line_chart <- function(
     tidyr::pivot_longer(- dplyr::all_of("date")) %>%
     dplyr::mutate(
       # Add series name labels at middle_date points
-      series_label = base::ifelse(.data$date == middle_date, .data$name, "")
+      series_label = base::ifelse(
+        .data$date == middle_date & show_series_labels,
+        .data$name,
+        ""
+      )
     )
 
   # Set font family and size
