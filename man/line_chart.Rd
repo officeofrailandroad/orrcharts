@@ -7,7 +7,7 @@
 line_chart(
   data,
   filename,
-  path,
+  path = NULL,
   chart_width = 6.7,
   chart_height = 3.567,
   series_colours = orr_colours(),
