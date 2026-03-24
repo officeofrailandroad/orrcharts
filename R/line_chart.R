@@ -33,7 +33,7 @@
 line_chart <- function(
     data,
     filename,
-    path,
+    path = NULL,
     chart_width = 6.7,
     chart_height = 3.567,
     series_colours = orr_colours(),
@@ -144,6 +144,8 @@ line_chart <- function(
       direction = "y",
       # Don't show segment lines
       min.segment.length = 100,
+      box.padding = 0.1,
+      force_pull = 5,
       seed = chart_seed
     ) +
     ggplot2::theme_classic() +
