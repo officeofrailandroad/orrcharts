@@ -72,3 +72,59 @@ side_by_side_bar(
 
 ![Side by side bar for TOC time to 3](man/figures/toc_time_to_3.png)
 
+### Line Chart
+
+A simple line chart with series and last point data labels, used to plot time series.
+
+The `line_chart` functions expects a data frame with at least 2 columns. The first column sets the x-axis, this is usually a date or time period. Each subsequent column sets the values for the line series - the column names are used as series labels.
+
+The series and data labels use `ggrepel::geom_text_repel()` to avoid overlapping points and other labels. This algorithm uses random numbers and is not always perfect.
+
+```r
+# Generate data for the chart
+line_chart_data <- tibble(
+  year = c("2016/17", "2017/18", "2018/19", "2019/20", "2020/21", "2021/22", "2022/23", "2023/24", "2024/25", "2025/26"),
+  `A series` = rnorm(10, 50, 5),
+  `Another series` = rnorm(10, 30, 5),
+  `Third series` = rnorm(10, 20, 5)
+)
+
+# Create the chart
+line_chart(
+  data = line_chart_data,
+  filename = "line_chart.png",
+  y_axis_breaks = seq(from = 0, to = 60, by = 10), # set where lines appear on y-axis
+  x_axis_labels = c("2016/17", "2018/19", "2020/21", "2022/23", "2024/25"), # set which x-axis labels appear
+  show_series_labels = TRUE # display the series names
+)
+```
+
+![Line chart demo](man/figures/line_chart.png)
+
+### Bar chart
+
+A simple stacked bar chart with data labels.
+
+The `bar_chart` function expects a data frame with at least 2 columns. The first column sets the x-axis. Subsequent columns set the values which determine the height of sections in stacked bars.
+
+The format for the data labels can be controlled using the `data_labeller` argument. They are positioned in the centre of bar sections and coloured black or white to maximise contrast with the bar fill colour. The names of the columns which set the stack colours are displayed in a legend at the top of the chart. If the columns have long names they are wrapped into new lines automatically.
+
+```r
+# Generate data for chart
+bar_data <- tibble(
+  category = c("2020/21", "2021/22", "2022/23", "2023/24", "2024/25", "2025/26"),
+  `Bar category` = rnorm(6, 30, 6),
+  `Long category name with several words` = rnorm(6, 30, 6)
+)
+
+# Create chart
+bar_chart(
+  bar_data,
+  "bar_chart.png",
+  y_axis_breaks = seq(from = 0, to = 90, by = 30),
+  bar_colours = orr_colours()[c(6,1)] # Set colours to ORR dark and light blue
+)
+```
+![Bar chart demo](man/figures/bar_chart.png)
+
+
