@@ -36,6 +36,9 @@ quarterly_bar <- function(
     last_point_labeller = scales::label_percent(scale = 1, accuracy = 0.1)
 ) {
   # Argument assertions
+  assert_chart_params(
+    data, filename, path, chart_width, chart_height, y_axis_breaks, y_axis_labeller
+  )
   assertthat::assert_that(
     assertthat::is.number(v_nudge_data_label),
     assertthat::is.number(h_nudge_x_axis_labels),
@@ -44,11 +47,6 @@ quarterly_bar <- function(
   assertthat::assert_that(
     assertthat::is.string(bar_colour),
     msg = "Argument bar_colour needs to be a colour string"
-  )
-  assertthat::assert_that(
-    base::inherits(data, "data.frame"),
-    base::ncol(data) >= 2,
-    msg = "Argument data needs to be a data frame with at least 2 columns"
   )
 
   # set data column names

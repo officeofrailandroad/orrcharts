@@ -20,23 +20,10 @@ bar_chart <- function(
     data_labeller = label_orr_comma(),
     show_legend = TRUE
 ) {
-  assertthat::assert_that(
-    base::inherits(data, "data.frame"),
-    base::ncol(data) >= 2,
-    msg = "Argument data needs to be a data frame with at least 2 columns"
-  )
-  assertthat::assert_that(
-    assertthat::is.string(filename),
-    msg = "filename arguement should be a string of length 1"
-  )
-  assertthat::assert_that(
-    assertthat::is.number(chart_width),
-    assertthat::is.number(chart_height),
-    msg = "chart_width and chart_height need to be single numbers"
-  )
-  assertthat::assert_that(
-    assertthat::is.flag(show_legend),
-    msg = "show_legend argument can be TRUE or FALSE"
+  # Check input parameters
+  assert_chart_params(
+    data, filename, path, chart_width, chart_height, bar_colours, y_axis_breaks,
+    y_axis_labeller, data_labeller, show_legend
   )
 
   # Set name of first column of data

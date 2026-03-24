@@ -36,6 +36,30 @@ side_by_side_bar <- function(
     left_bar_labeller = label_orr_comma(),
     right_bar_labeller = label_orr_percent()
 ) {
+  assert_chart_params(
+    data, filename, path, chart_width, chart_height
+  )
+  assertthat::assert_that(
+    assertthat::is.string(left_bar_title),
+    assertthat::is.string(right_bar_title),
+    msg = "left_bar_title and right_bar_title need to be strings of length 1."
+  )
+  assertthat::assert_that(
+    assertthat::is.flag(right_bar_order_descending),
+    msg = "right_bar_order_descending expects TRUE or FALSE"
+  )
+  assertthat::assert_that(
+    rlang::is_closure(left_bar_labeller),
+    rlang::is_closure(right_bar_labeller),
+    msg = "left_bar_labeller and right_bar_labeller expect functions"
+  )
+  assertthat::assert_that(
+    assertthat::is.string(left_bar_colour),
+    assertthat::is.string(right_bar_colour_positive),
+    assertthat::is.string(right_bar_colour_negative),
+    msg = "left_bar_colour, right_bar_colour_positive, right_bar_colour_negative need to be colour strings of length 1"
+  )
+
   data <- data[, 1:3]
   colnames(data) <- c("toc", "value", "change")
 

@@ -45,7 +45,11 @@ line_chart <- function(
     data_labeller = label_orr_comma(),
     chart_seed = 101
 ) {
-
+  assert_chart_params(
+    data, filename, path, chart_width, chart_height, series_colours, point_shapes,
+    x_axis_labels, y_axis_breaks, y_axis_labeller, show_series_labels, data_labeller,
+    chart_seed
+  )
   # Fix first column name
   colnames(data)[1] <- "date"
 
