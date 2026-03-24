@@ -1,7 +1,7 @@
 Package: orrcharts
 Type: Package
 Title: Charts For ORR Stats Reports
-Version: 0.1.3
+Version: 0.1.4
 Authors@R: c(
     person(
       "Oli", "Elliott",
