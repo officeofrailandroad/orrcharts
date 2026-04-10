@@ -142,7 +142,7 @@ side_by_side_bar <- function(
       labeller = ggplot2::labeller(col = col_titles) # Sets chart titles
       ) +
     ggplot2::coord_flip(clip = "off") +
-    ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0.3, 0))) +
+    ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0.3, 0.05))) +
     ggplot2::scale_x_discrete(expand = ggplot2::expansion(mult = c(0,0))) +
     ggplot2::scale_fill_manual(values = bar_colour_types) +
     ggplot2::guides(fill = "none") + # No fill legend for colours
