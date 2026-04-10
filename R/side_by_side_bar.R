@@ -106,8 +106,8 @@ side_by_side_bar <- function(
 
   # Set the titles for each chart
   col_titles <- c(
-    "value" = stringr::str_wrap(left_bar_title, width = 35),
-    "change" = stringr::str_wrap(right_bar_title, width = 35)
+    "value" = stringr::str_wrap(left_bar_title, width = 31),
+    "change" = stringr::str_wrap(right_bar_title, width = 31)
   )
 
   # Set the bar colours
