@@ -1,4 +1,11 @@
 
+assert_is_labeller <- function(x, msg) {
+  assertthat::assert_that(
+    rlang::is_closure(x),
+    msg = msg
+  )
+}
+
 
 # Run common argument assertions in the chart functions
 assert_chart_params <- function(...) {
@@ -61,9 +68,25 @@ assert_chart_params <- function(...) {
 
   # y axis labeller
   if("y_axis_labeller" %in% names(args)) {
-    assertthat::assert_that(
-      rlang::is_closure(args$y_axis_labeller),
+    assert_is_labeller(
+      args$y_axis_labeller,
       msg = "y_axis_labeller expects a function"
+    )
+  }
+
+  # left_bar_labeller
+  if("left_bar_labeller" %in% names(args)) {
+    assert_is_labeller(
+      args$left_bar_labeller,
+      msg = "left_bar_labeller expects a function"
+    )
+  }
+
+  # right_bar_labeller
+  if("right_bar_labeller" %in% names(args)) {
+    assert_is_labeller(
+      args$right_bar_labeller,
+      msg = "right_bar_labeller expects a function"
     )
   }
 
@@ -78,8 +101,8 @@ assert_chart_params <- function(...) {
 
   # data labeller
   if("data_labeller" %in% names(args)) {
-    assertthat::assert_that(
-      rlang::is_closure(args$data_labeller),
+    assert_is_labeller(
+      args$data_labeller,
       msg = "data_labeller expects a function"
     )
   }

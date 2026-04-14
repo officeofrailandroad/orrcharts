@@ -1,7 +1,7 @@
 Package: orrcharts
 Type: Package
 Title: Charts For ORR Stats Reports
-Version: 0.1.5
+Version: 0.1.6
 Authors@R: c(
     person(
       "Oli", "Elliott",
@@ -19,14 +19,18 @@ Imports:
     farver,
     ggplot2,
     ggrepel,
+    ggtext,
     magrittr,
     methods,
     rlang,
     scales,
     showtext,
+    stats,
     stringr,
     sysfonts,
-    tidyr
+    tibble,
+    tidyr,
+    tidyselect
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Suggests: 
