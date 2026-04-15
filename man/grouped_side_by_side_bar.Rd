@@ -16,7 +16,8 @@ grouped_side_by_side_bar(
   right_bar_colour = "#D8730F",
   left_bar_labeller = label_orr_comma(),
   right_bar_labeller = label_orr_percent(),
-  text_outside_bar_threshold = 0.2
+  text_outside_bar_threshold = 0.2,
+  rightside_margin = NA
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ a labeller function, which turn data numeric values into character labels.
 See \link[scales]{label_percent}}
 
 \item{text_outside_bar_threshold}{Proportion of largest bar at which data labels are shown outside the bar. Default is 0.2.}
+
+\item{rightside_margin}{Expand the margin on the right-hand side of the plot if a data label is cut off.}
 }
 \description{
 Two columns of horizontal bars, grouped with titles.

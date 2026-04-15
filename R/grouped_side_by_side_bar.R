@@ -7,6 +7,7 @@
 #' @param data A dataframe with 4 columns. The first column should hold the bar categories, which set the y-axis labels (not in bold). The second column hold the groups of the bar categories, shown on the y-axis labels in bold. Column 3 holds the values for the left had set of bars. Column 4 holds the values for the right hand set of bars.The vertical order of the bars within the group matches the order they are supplied in the dataframe.
 #' @param right_bar_colour String hexcodes for the right hand set of bars.
 #' @param text_outside_bar_threshold Proportion of largest bar at which data labels are shown outside the bar. Default is 0.2.
+#' @param rightside_margin Expand the margin on the right-hand side of the plot if a data label is cut off.
 #' @export
 grouped_side_by_side_bar <- function(
     data,
@@ -20,7 +21,8 @@ grouped_side_by_side_bar <- function(
     right_bar_colour = "#D8730F",
     left_bar_labeller = label_orr_comma(),
     right_bar_labeller = label_orr_percent(),
-    text_outside_bar_threshold = 0.2
+    text_outside_bar_threshold = 0.2,
+    rightside_margin = NA
     ) {
   # Check input parameters
   assert_chart_params(
@@ -41,6 +43,11 @@ grouped_side_by_side_bar <- function(
     assertthat::is.number(text_outside_bar_threshold),
     msg = "text_outside_bar_threshold need to be numeric of length 1"
   )
+  assertthat::assert_that(
+    assertthat::is.number(rightside_margin) | is.na(rightside_margin),
+    msg = "rightside_margin need to be numeric of length 1 or NA"
+  )
+
 
   # Set the colours of the bars and data labels
   bar_colours <- c(value = left_bar_colour, change = right_bar_colour)
@@ -112,15 +119,17 @@ grouped_side_by_side_bar <- function(
     dplyr::group_by(.data$name) %>%
     dplyr::mutate(
       # Find values to help determine if text label should be inside or outside the bar
-      max_value = base::abs(base::max(.data$value, na.rm = TRUE)),
-      value_prop_of_max = base::abs(.data$value / .data$max_value)
+      max_value = base::max(.data$value, na.rm = TRUE),
+      min_value = base::min(c(.data$value, 0), na.rm = TRUE),
+      val_range = .data$max_value - .data$min_value,
+      value_prop_of_max = base::abs(.data$value / .data$val_range)
     ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
       # If bar is less than 20% of the biggest bar, put label outside
       text_label_position_group = base::ifelse(.data$value_prop_of_max < text_outside_bar_threshold, "outside", .data$name),
       # Calculate text label position
-      text_label_y = base::ifelse(.data$text_label_position_group == "outside", .data$value + base::sign(.data$value) * (0.03 * .data$max_value), .data$value - base::sign(.data$value) * (0.03 * .data$max_value)),
+      text_label_y = base::ifelse(.data$text_label_position_group == "outside", .data$value + base::sign(.data$value) * (0.03 * .data$val_range), .data$value - base::sign(.data$value) * (0.03 * .data$val_range)),
       # text_label_y = 0,
       # Create the data labels text
       text_label = base::ifelse(.data$name == "value", left_bar_labeller(.data$value), right_bar_labeller(.data$value)),
@@ -179,7 +188,7 @@ grouped_side_by_side_bar <- function(
       scales = "free_x",
       labeller = ggplot2::labeller(name = col_titles)
     ) +
-    ggplot2::coord_flip() +
+    ggplot2::coord_flip(clip = "off") +
     ggplot2::theme_minimal() +
     ggplot2::scale_x_discrete(
       name = NULL
@@ -207,7 +216,8 @@ grouped_side_by_side_bar <- function(
         face = "bold",
         lineheight = 0.3,
         margin = ggplot2::margin(t = 0, l = 7, b = 5, r = 0)
-      )
+      ),
+      margins = ggplot2::margin_part(r = rightside_margin)
     ) +
     ggplot2::guides(
       fill = "none",
