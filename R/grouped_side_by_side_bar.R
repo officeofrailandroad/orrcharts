@@ -6,7 +6,6 @@
 #' @inheritParams side_by_side_bar
 #' @param data A dataframe with 4 columns. The first column should hold the bar categories, which set the y-axis labels (not in bold). The second column hold the groups of the bar categories, shown on the y-axis labels in bold. Column 3 holds the values for the left had set of bars. Column 4 holds the values for the right hand set of bars.The vertical order of the bars within the group matches the order they are supplied in the dataframe.
 #' @param right_bar_colour String hexcodes for the right hand set of bars.
-#' @param h_nudge_text_outside_bar Shift the data labels which are outside the bars left or right. Use values between -0.1 and 0.1. Positive values move to the right.
 #' @param text_outside_bar_threshold Proportion of largest bar at which data labels are shown outside the bar. Default is 0.2.
 #' @export
 grouped_side_by_side_bar <- function(
@@ -21,7 +20,6 @@ grouped_side_by_side_bar <- function(
     right_bar_colour = "#D8730F",
     left_bar_labeller = label_orr_comma(),
     right_bar_labeller = label_orr_percent(),
-    h_nudge_text_outside_bar = 0,
     text_outside_bar_threshold = 0.2
     ) {
   # Check input parameters
@@ -40,9 +38,8 @@ grouped_side_by_side_bar <- function(
     msg = "left_bar_colour, right_bar_colour need to be colour strings of length 1"
   )
   assertthat::assert_that(
-    assertthat::is.number(h_nudge_text_outside_bar),
     assertthat::is.number(text_outside_bar_threshold),
-    msg = "h_nudge_text_outside_bar and text_outside_bar_threshold need to be numeric of length 1"
+    msg = "text_outside_bar_threshold need to be numeric of length 1"
   )
 
   # Set the colours of the bars and data labels
@@ -115,15 +112,16 @@ grouped_side_by_side_bar <- function(
     dplyr::group_by(.data$name) %>%
     dplyr::mutate(
       # Find values to help determine if text label should be inside or outside the bar
-      max_value = base::max(.data$value, na.rm = TRUE),
-      value_prop_of_max = .data$value / .data$max_value
+      max_value = base::abs(base::max(.data$value, na.rm = TRUE)),
+      value_prop_of_max = base::abs(.data$value / .data$max_value)
     ) %>%
     dplyr::ungroup() %>%
     dplyr::mutate(
       # If bar is less than 20% of the biggest bar, put label outside
       text_label_position_group = base::ifelse(.data$value_prop_of_max < text_outside_bar_threshold, "outside", .data$name),
       # Calculate text label position
-      text_label_y = base::ifelse(.data$text_label_position_group == "outside", .data$value + ((0.15 + h_nudge_text_outside_bar) * .data$max_value), .data$value - (0.02 * .data$max_value)),
+      text_label_y = base::ifelse(.data$text_label_position_group == "outside", .data$value + base::sign(.data$value) * (0.03 * .data$max_value), .data$value - base::sign(.data$value) * (0.03 * .data$max_value)),
+      # text_label_y = 0,
       # Create the data labels text
       text_label = base::ifelse(.data$name == "value", left_bar_labeller(.data$value), right_bar_labeller(.data$value)),
       # Set order of the facets
@@ -141,6 +139,8 @@ grouped_side_by_side_bar <- function(
     change = stringr::str_wrap(right_bar_title, 31)
   )
 
+
+
   gsbs_plot <- piv_plot_data %>%
     ggplot2::ggplot(
       ggplot2::aes(x = stats::reorder(.data$type, -.data$plot_order))) +
@@ -149,11 +149,28 @@ grouped_side_by_side_bar <- function(
     ggplot2::geom_text(
       ggplot2::aes(
         y = .data$text_label_y,
-        label = .data$text_label,
+        label = ifelse(
+          (.data$value >= 0 & .data$text_label_position_group != "outside") |
+            (.data$value < 0 & .data$text_label_position_group == "outside"),
+          .data$text_label, NA),
         colour = .data$text_label_position_group
         ),
       na.rm = TRUE,
       hjust = 1,
+      family = font_fam,
+      size = font_size / ggplot2::.pt
+    ) +
+    ggplot2::geom_text(
+      ggplot2::aes(
+        y = .data$text_label_y,
+        label = ifelse(
+          (.data$value >= 0 & .data$text_label_position_group != "outside") |
+            (.data$value < 0 & .data$text_label_position_group == "outside"),
+          NA, .data$text_label),
+        colour = .data$text_label_position_group
+      ),
+      na.rm = TRUE,
+      hjust = 0,
       family = font_fam,
       size = font_size / ggplot2::.pt
     ) +

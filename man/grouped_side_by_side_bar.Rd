@@ -16,7 +16,6 @@ grouped_side_by_side_bar(
   right_bar_colour = "#D8730F",
   left_bar_labeller = label_orr_comma(),
   right_bar_labeller = label_orr_percent(),
-  h_nudge_text_outside_bar = 0,
   text_outside_bar_threshold = 0.2
 )
 }
@@ -42,8 +41,6 @@ left-hand side bar chart. Default is for ORR dark blue.}
 \item{left_bar_labeller, right_bar_labeller}{Functions, for example result of
 a labeller function, which turn data numeric values into character labels.
 See \link[scales]{label_percent}}
-
-\item{h_nudge_text_outside_bar}{Shift the data labels which are outside the bars left or right. Use values between -0.1 and 0.1. Positive values move to the right.}
 
 \item{text_outside_bar_threshold}{Proportion of largest bar at which data labels are shown outside the bar. Default is 0.2.}
 }
