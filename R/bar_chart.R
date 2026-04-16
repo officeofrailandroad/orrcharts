@@ -103,6 +103,7 @@ bar_chart <- function(
   ggplot2::ggsave(
     filename = filename,
     plot = bplt,
+    path = path,
     width = chart_width,
     height = chart_height,
     units = "in",

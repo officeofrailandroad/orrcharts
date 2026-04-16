@@ -175,6 +175,7 @@ line_chart <- function(
   ggplot2::ggsave(
     filename = filename,
     plot = plot,
+    path = path,
     width = chart_width,
     height = chart_height,
     units = "in",
