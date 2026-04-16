@@ -30,6 +30,7 @@
 #'   moves the labels in small increments at random trying to minimise the
 #'   amount of overlaps. If you are not happy with the final positions, change
 #'   the `chart_seed` argument - this might not always return different results.
+#' @export
 line_chart <- function(
     data,
     filename,
