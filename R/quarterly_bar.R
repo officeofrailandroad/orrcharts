@@ -9,9 +9,9 @@
 #' @param chart_width,chart_height Width and height in inches of the PNG output
 #' @param bar_colour A hex code or colour name for the fill colour of the bars.
 #'   Defaults to ORR dark blue.
-#' @param v_nudge_data_label Shift the last bar data label up or down to dodge
-#'   the neighbouring bars. Negative values move upwards, positive values move
-#'   downwards.
+#' @param v_nudge_data_label,h_nudge_data_label Shift the last bar data label up
+#'   or down, left or right to dodge the neighbouring bars. Negative values move
+#'   upwards, positive values move downwards.
 #' @param h_nudge_x_axis_labels Shift the x-axis labels right or left to be in
 #'   the centre of the years. Typically between -1 and 1. Negative value shifts
 #'   right, positive shifts left.
@@ -20,6 +20,8 @@
 #' @param y_axis_labeller A function which creates the y-axis label strings.
 #' @param last_point_labeller A function which create the data label over the
 #'   last point from the value.
+#' @param extra_rightside_margin Add extra margin to the righthand side of the
+#'   plot to make space for a data label.
 #' @return A ggplot2 bar chart for ORR quarterly bar time series.
 #' @export
 quarterly_bar <- function(
@@ -30,10 +32,12 @@ quarterly_bar <- function(
     chart_height = 3.567,
     bar_colour = "#253268",
     v_nudge_data_label = 0,
+    h_nudge_data_label = 0,
     h_nudge_x_axis_labels = 0,
     y_axis_breaks = ggplot2::waiver(),
     y_axis_labeller = scales::label_percent(scale = 1, accuracy = 1),
-    last_point_labeller = scales::label_percent(scale = 1, accuracy = 0.1)
+    last_point_labeller = scales::label_percent(scale = 1, accuracy = 0.1),
+    extra_rightside_margin = 0
 ) {
   # Argument assertions
   assert_chart_params(
@@ -102,7 +106,7 @@ quarterly_bar <- function(
     ggplot2::geom_text(
       data = label_data,
       ggplot2::aes(.data$bar_number, .data$value, label = .data$label),
-      hjust = "center",
+      hjust = 0.5 + h_nudge_data_label,
       vjust = -1 + v_nudge_data_label, # hover above bar
       family = font_fam,
       fontface = "bold",
@@ -129,7 +133,7 @@ quarterly_bar <- function(
       text = ggplot2::element_text(family = font_fam, size = font_size),
       axis.ticks.length.x = grid::unit(.5, "cm"), # set length of x axis ticks
       title = ggplot2::element_blank(), # remove whitespace at top of plot for title
-      plot.margin = ggplot2::margin(t = 5, r = 10, b = 0, l = 0.5), # set margins around plot
+      plot.margin = ggplot2::margin(t = 5, r = 10 + extra_rightside_margin, b = 0, l = 0.5), # set margins around plot
       panel.grid.major.y = ggplot2::element_line(color = "grey90"), # set y axis lines to light grey
       # set styles for x axis labels
       axis.text.x  =  ggplot2::element_text(

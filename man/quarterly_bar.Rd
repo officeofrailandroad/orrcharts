@@ -12,10 +12,12 @@ quarterly_bar(
   chart_height = 3.567,
   bar_colour = "#253268",
   v_nudge_data_label = 0,
+  h_nudge_data_label = 0,
   h_nudge_x_axis_labels = 0,
   y_axis_breaks = ggplot2::waiver(),
   y_axis_labeller = scales::label_percent(scale = 1, accuracy = 1),
-  last_point_labeller = scales::label_percent(scale = 1, accuracy = 0.1)
+  last_point_labeller = scales::label_percent(scale = 1, accuracy = 0.1),
+  extra_rightside_margin = 0
 )
 }
 \arguments{
@@ -34,9 +36,9 @@ working directory.}
 \item{bar_colour}{A hex code or colour name for the fill colour of the bars.
 Defaults to ORR dark blue.}
 
-\item{v_nudge_data_label}{Shift the last bar data label up or down to dodge
-the neighbouring bars. Negative values move upwards, positive values move
-downwards.}
+\item{v_nudge_data_label, h_nudge_data_label}{Shift the last bar data label up
+or down, left or right to dodge the neighbouring bars. Negative values move
+upwards, positive values move downwards.}
 
 \item{h_nudge_x_axis_labels}{Shift the x-axis labels right or left to be in
 the centre of the years. Typically between -1 and 1. Negative value shifts
@@ -49,6 +51,9 @@ use ggplot2 default.}
 
 \item{last_point_labeller}{A function which create the data label over the
 last point from the value.}
+
+\item{extra_rightside_margin}{Add extra margin to the righthand side of the
+plot to make space for a data label.}
 }
 \value{
 A ggplot2 bar chart for ORR quarterly bar time series.
