@@ -160,6 +160,7 @@ line_chart <- function(
       name = NULL,
       breaks = y_axis_breaks,
       limits = y_limits,
+      labels = y_axis_labeller, # show axis labels with % symbol if needed
       expand = ggplot2::expansion(mult = 0)
     ) +
     ggplot2::scale_color_manual(values = series_colours) +
