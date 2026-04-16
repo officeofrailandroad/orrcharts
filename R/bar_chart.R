@@ -8,6 +8,7 @@
 #' @param bar_colours An array of colour hex-codes. Defaults to ORR colours.
 #' @param data_labeller A function which controls how the data labels over the bars are displayed.
 #' @param show_legend Should the legend be shown on the chart. Defaults to `TRUE`.
+#' @export
 bar_chart <- function(
     data,
     filename,
