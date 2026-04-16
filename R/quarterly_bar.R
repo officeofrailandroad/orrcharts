@@ -93,9 +93,8 @@ quarterly_bar <- function(
 
   # Set font family and size
   font_fam <- "Arial"
-  font_size <- 37
-
   showtext::showtext_auto()
+  font_size <- 13
 
   qbar_plot <- plot_data %>%
     ggplot2::ggplot() +
@@ -111,9 +110,8 @@ quarterly_bar <- function(
       family = font_fam,
       fontface = "bold",
       size = font_size,
-      size.unit = "pt"
     ) +
-    ggplot2::theme_classic(base_family = font_fam) +
+    ggplot2::theme_classic() +
     ggplot2::scale_y_continuous(
       breaks = y_axis_breaks, # set y-axis breaks to every 20%
       labels = y_axis_labeller, # show axis labels with % symbol if needed
@@ -130,7 +128,8 @@ quarterly_bar <- function(
       name = NULL # remove axis title
     ) +
     ggplot2::theme(
-      text = ggplot2::element_text(family = font_fam, size = font_size),
+      text = ggplot2::element_text(family = font_fam, size = (font_size * ggplot2::.pt)),
+      axis.text = ggplot2::element_text(size = ggplot2::rel(1)),
       axis.ticks.length.x = grid::unit(.5, "cm"), # set length of x axis ticks
       title = ggplot2::element_blank(), # remove whitespace at top of plot for title
       plot.margin = ggplot2::margin(t = 5, r = 10 + extra_rightside_margin, b = 0, l = 0.5), # set margins around plot
@@ -138,11 +137,10 @@ quarterly_bar <- function(
       # set styles for x axis labels
       axis.text.x  =  ggplot2::element_text(
         colour = "black",
-        hjust = 0.2 * plot_years - 1.8 + h_nudge_x_axis_labels, # left right adjustment - calculation tries to adjust for different number of years
+        size = ggplot2::rel(1),
+        hjust = -0.37 + h_nudge_x_axis_labels, # Default placement for 6 years
         vjust = 6 # up down adjustment
-      ),
-      # set styles for y axis labels
-      axis.text.y  =  ggplot2::element_text(colour = "black")
+      )
     )
 
   # Save plot in standard size

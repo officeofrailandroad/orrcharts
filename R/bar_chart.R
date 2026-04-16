@@ -50,8 +50,8 @@ bar_chart <- function(
 
   # Set font family and size
   font_fam <- "Arial"
-  font_size <- 37
   showtext::showtext_auto()
+  font_size <- 13
 
   plot_data <- data %>%
     tidyr::pivot_longer(- dplyr::all_of("category")) %>%
@@ -70,7 +70,7 @@ bar_chart <- function(
       # Put labels in the middle of the bars
       position = ggplot2::position_stack(vjust = 0.5),
       family = font_fam,
-      size = font_size / ggplot2::.pt
+      size = font_size
     ) +
     ggplot2::theme_classic() +
     ggplot2::scale_y_continuous(
@@ -87,13 +87,14 @@ bar_chart <- function(
     ggplot2::scale_colour_manual(values = text_colours) +
     ggplot2::guides(colour = "none", fill = fill_legend) +
     ggplot2::theme(
-      text = ggplot2::element_text(family = font_fam, size = grid::unit(font_size, "pt")),
+      text = ggplot2::element_text(family = font_fam, size = (font_size * ggplot2::.pt)),
+      axis.text = ggplot2::element_text(size = ggplot2::rel(1)),
       panel.grid.major.y = ggplot2::element_line(color = "grey90"),
       axis.ticks.x = ggplot2::element_blank(), # No x-axis ticks
       legend.direction = "horizontal", # Layout legend categories horizontally
       legend.position = "inside",
       legend.position.inside = c(0.5,0.95), # Legend centered and near top
-      legend.text = ggplot2::element_text(lineheight = 0.25),
+      legend.text = ggplot2::element_text(lineheight = 0.25, size = ggplot2::rel(1)),
       legend.title = ggplot2::element_blank(), # No legend title
       # Remove legend background
       legend.background = ggplot2::element_blank(),

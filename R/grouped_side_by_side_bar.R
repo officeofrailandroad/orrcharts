@@ -139,13 +139,14 @@ grouped_side_by_side_bar <- function(
 
   # Set font family and size
   font_fam <- "Arial"
-  font_size <- 37
   showtext::showtext_auto()
+  font_size <- 13
 
   # Set titles above bar columns
+  title_char_width <- 25
   col_titles <- c(
-    value = stringr::str_wrap(left_bar_title, 31),
-    change = stringr::str_wrap(right_bar_title, 31)
+    value = stringr::str_wrap(left_bar_title, title_char_width),
+    change = stringr::str_wrap(right_bar_title, title_char_width)
   )
 
 
@@ -167,7 +168,7 @@ grouped_side_by_side_bar <- function(
       na.rm = TRUE,
       hjust = 1,
       family = font_fam,
-      size = font_size / ggplot2::.pt
+      size = font_size
     ) +
     ggplot2::geom_text(
       ggplot2::aes(
@@ -181,7 +182,7 @@ grouped_side_by_side_bar <- function(
       na.rm = TRUE,
       hjust = 0,
       family = font_fam,
-      size = font_size / ggplot2::.pt
+      size = font_size
     ) +
     ggplot2::facet_wrap(
       ~ .data$name,
@@ -205,15 +206,16 @@ grouped_side_by_side_bar <- function(
       values = c(text_colours, "outside" = "black")
     ) +
     ggplot2::theme(
-      text = ggplot2::element_text(family = font_fam, size = grid::unit(font_size, "pt")),
+      text = ggplot2::element_text(family = font_fam, size = (font_size * ggplot2::.pt)),
       # Using ggtext element_markdown seems to be safer for setting variable label face
-      axis.text = ggtext::element_markdown(face = y_lab_face, colour = "black"),
+      axis.text = ggtext::element_markdown(face = y_lab_face, colour = "black", size = ggplot2::rel(1)),
       axis.ticks = ggplot2::element_blank(),
       panel.grid = ggplot2::element_blank(),
-      strip.text.x = ggplot2::element_text(
+      strip.text = ggplot2::element_text(
         hjust = 0, # Align left
         vjust = 0,
         face = "bold",
+        size = ggplot2::rel(1),
         lineheight = 0.3,
         margin = ggplot2::margin(t = 0, l = 7, b = 5, r = 0)
       ),

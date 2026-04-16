@@ -100,14 +100,14 @@ side_by_side_bar <- function(
 
   # Set font family and size
   font_fam <- "Arial"
-  font_size <- 37
-
   showtext::showtext_auto()
+  font_size <- 13
 
   # Set the titles for each chart
+  title_char_width <- 25
   col_titles <- c(
-    "value" = stringr::str_wrap(left_bar_title, width = 31),
-    "change" = stringr::str_wrap(right_bar_title, width = 31)
+    "value" = stringr::str_wrap(left_bar_title, width = title_char_width),
+    "change" = stringr::str_wrap(right_bar_title, width = title_char_width)
   )
 
   # Set the bar colours
@@ -130,9 +130,8 @@ side_by_side_bar <- function(
         label = .data$value_label
         ),
       family = font_fam,
-      size = 0.90*font_size, # Data labels look bigger so small adjustment here
-      hjust = "right",
-      size.unit = "pt") +
+      size = font_size,
+      hjust = "right") +
     ggplot2::geom_hline(yintercept = 0, colour = "black", linewidth = 0.2) + # vertical axis lines
     ggplot2::geom_vline(xintercept = 0.4, colour = "black", linewidth = 0.2) + # bottom horizontal line
     ggplot2::geom_vline(xintercept = n_tocs + 0.6, colour = "black", linewidth = 0.2) + # top horizontal line
@@ -142,22 +141,24 @@ side_by_side_bar <- function(
       labeller = ggplot2::labeller(col = col_titles) # Sets chart titles
       ) +
     ggplot2::coord_flip(clip = "off") +
-    ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0.3, 0.05))) +
+    ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0.35, 0.05))) +
     ggplot2::scale_x_discrete(expand = ggplot2::expansion(mult = c(0,0))) +
     ggplot2::scale_fill_manual(values = bar_colour_types) +
     ggplot2::guides(fill = "none") + # No fill legend for colours
     ggplot2::theme_classic(base_family = font_fam) +
     ggplot2::theme(
-      text = ggplot2::element_text(family = font_fam, size = font_size, colour = "black"),
+      text = ggplot2::element_text(family = font_fam, size = (font_size * ggplot2::.pt)),
+      axis.text = ggplot2::element_text(size = ggplot2::rel(1)),
       axis.title = ggplot2::element_blank(),
       axis.text.x = ggplot2::element_blank(),
       axis.ticks = ggplot2::element_blank(),
       axis.line = ggplot2::element_blank(),
       strip.background = ggplot2::element_blank(),
-      strip.text.x = ggplot2::element_text(
+      strip.text = ggplot2::element_text(
         hjust = 0, # Align left
         vjust = 0,
         face = "bold",
+        size = ggplot2::rel(1),
         lineheight = 0.3,
         margin = ggplot2::margin(t = 0, l = 5, b = 5, r = 0) # nudge text to line up with data labels
         ),

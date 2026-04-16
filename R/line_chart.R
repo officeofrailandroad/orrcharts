@@ -97,8 +97,8 @@ line_chart <- function(
 
   # Set font family and size
   font_fam <- "Arial"
-  font_size <- 37
   showtext::showtext_auto()
+  font_size <- 13
 
   plot <- ggplot2::ggplot(
     data = plot_data,
@@ -116,7 +116,7 @@ line_chart <- function(
     ggrepel::geom_text_repel(
       ggplot2::aes(label = .data$series_label),
       family = font_fam,
-      size = font_size  / ggplot2::.pt,
+      size = font_size,
       fontface = "bold",
       # Set label anchor point to centre of label
       hjust = "center",
@@ -137,7 +137,7 @@ line_chart <- function(
       data = last_points,
       ggplot2::aes(label = .data$label),
       family = font_fam,
-      size = font_size  / ggplot2::.pt,
+      size = font_size,
       fontface = "bold",
       hjust = -0.2, # nudge data label to the right of last point
       vjust = "middle",
@@ -168,8 +168,9 @@ line_chart <- function(
     # Don't show legends
     ggplot2::guides(colour = "none", shape = "none") +
     ggplot2::theme(
-      text = ggplot2::element_text(family = font_fam, size = grid::unit(font_size, "pt")),
-      panel.grid.major.y = ggplot2::element_line(color = "grey90"), # set y axis lines to light grey
+      text = ggplot2::element_text(family = font_fam, size = (font_size * ggplot2::.pt)),
+      axis.text = ggplot2::element_text(size = ggplot2::rel(1)),
+      panel.grid.major.y = ggplot2::element_line(color = "grey90") # set y axis lines to light grey
     )
 
   ggplot2::ggsave(
