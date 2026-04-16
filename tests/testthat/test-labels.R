@@ -15,6 +15,8 @@ test_that("label_orr_percent creates the expected labeller", {
   expect_equal(lbl_fn(-0.3123), "-0.3%")
   expect_equal(lbl_fn(0), "0.0%")
   expect_equal(lbl_fn(c(0, 2, 0.3, 5)), c("0.0%", "2%", "0.3%", "5%"))
+  expect_equal(lbl_fn(c(0.97, -0.99)), c("1%", "-1%"))
+  expect_equal(lbl_fn(-0.92), "-0.9%")
 })
 
 test_that("label_orr_comma create the expected labeller", {

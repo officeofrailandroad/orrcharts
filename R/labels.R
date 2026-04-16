@@ -12,7 +12,7 @@ label_orr_percent <- function() {
       return(character())
     }
     base::ifelse(
-      x < 1 & x > -1,
+      x < 0.95 & x > -0.95,
       scales::number(x, accuracy = 0.1, suffix = "%"),
       scales::number(x, accuracy = 1, suffix = "%")
     )
