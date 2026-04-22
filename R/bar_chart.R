@@ -57,6 +57,8 @@ bar_chart <- function(
     tidyr::pivot_longer(- dplyr::all_of("category")) %>%
     dplyr::mutate(
       data_label = data_labeller(.data$value),
+      # Hide zero value data labels
+      data_label = ifelse(.data$value == 0, NA_character_, data_label),
       # Wrap long category names to display better in the legend
       name = stringr::str_wrap(.data$name, width = 20)
     )
@@ -70,7 +72,8 @@ bar_chart <- function(
       # Put labels in the middle of the bars
       position = ggplot2::position_stack(vjust = 0.5),
       family = font_fam,
-      size = font_size
+      size = font_size,
+      na.rm = TRUE
     ) +
     ggplot2::theme_classic() +
     ggplot2::scale_y_continuous(
