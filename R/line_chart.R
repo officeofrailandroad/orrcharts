@@ -90,7 +90,7 @@ line_chart <- function(
       # Add series name labels at middle_date points
       series_label = base::ifelse(
         .data$date == middle_date & show_series_labels,
-        .data$name,
+        stringr::str_wrap(.data$name, 20),
         ""
       )
     )
