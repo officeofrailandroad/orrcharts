@@ -13,6 +13,7 @@ bar_chart(
   bar_colours = orr_colours(),
   y_axis_breaks = ggplot2::waiver(),
   y_axis_labeller = scales::label_comma(),
+  x_axis_labels = ggplot2::waiver(),
   data_labeller = label_orr_comma(),
   show_legend = TRUE
 )
@@ -36,6 +37,8 @@ working directory.}
 use ggplot2 default.}
 
 \item{y_axis_labeller}{A function which creates the y-axis label strings.}
+
+\item{x_axis_labels}{Array of labels to display on the x-axis}
 
 \item{data_labeller}{A function which controls how the data labels over the bars are displayed.}
 

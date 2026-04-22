@@ -6,6 +6,7 @@
 #' @inheritParams ggplot2::ggsave
 #' @inheritParams quarterly_bar
 #' @param bar_colours An array of colour hex-codes. Defaults to ORR colours.
+#' @param x_axis_labels Array of labels to display on the x-axis
 #' @param data_labeller A function which controls how the data labels over the bars are displayed.
 #' @param show_legend Should the legend be shown on the chart. Defaults to `TRUE`.
 #' @export
@@ -18,6 +19,7 @@ bar_chart <- function(
     bar_colours = orr_colours(),
     y_axis_breaks = ggplot2::waiver(),
     y_axis_labeller = scales::label_comma(),
+    x_axis_labels = ggplot2::waiver(),
     data_labeller = label_orr_comma(),
     show_legend = TRUE
 ) {
@@ -58,7 +60,7 @@ bar_chart <- function(
     dplyr::mutate(
       data_label = data_labeller(.data$value),
       # Hide zero value data labels
-      data_label = ifelse(.data$value == 0, NA_character_, data_label),
+      data_label = ifelse(.data$value == 0, NA_character_, .data$data_label),
       # Wrap long category names to display better in the legend
       name = stringr::str_wrap(.data$name, width = 20)
     )
@@ -84,7 +86,8 @@ bar_chart <- function(
       expand = ggplot2::expansion(mult = 0)
     ) +
     ggplot2::scale_x_discrete(
-      name = NULL
+      name = NULL,
+      labels = x_axis_labels
     ) +
     ggplot2::scale_fill_manual(values = bar_colours) +
     ggplot2::scale_colour_manual(values = text_colours) +
