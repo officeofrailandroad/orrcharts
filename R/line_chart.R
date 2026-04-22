@@ -130,6 +130,8 @@ line_chart <- function(
       min.segment.length = 100,
       # Increased the default allowed overlaps for when lines are really close together.
       max.overlaps = 20,
+      # Set line height for wrapped labels
+      lineheight = 0.25,
       seed = chart_seed
     ) +
     # Last point data labels
