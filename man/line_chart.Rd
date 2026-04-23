@@ -16,6 +16,7 @@ line_chart(
   y_axis_breaks = ggplot2::waiver(),
   y_axis_labeller = scales::label_comma(),
   show_series_labels = TRUE,
+  series_label_coordinates = NULL,
   data_labeller = label_orr_comma(),
   chart_seed = 101
 )
@@ -52,6 +53,11 @@ use ggplot2 default.}
 \item{show_series_labels}{If \code{TRUE} chart will display the series labels,
 taken from column names, on the chart. Label colours will match series
 colours.}
+
+\item{series_label_coordinates}{Set series label location manually. Expects a
+data frame with 3 columns containing the series name (from the data column
+headers), x and y coordinates in the format supplied in data. If NULL, the
+default, locations are guessed using ggrepel.}
 
 \item{data_labeller}{Function which controls how the data labels are
 displayed.}

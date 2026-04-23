@@ -21,6 +21,10 @@
 #'   colours.
 #' @param data_labeller Function which controls how the data labels are
 #'   displayed.
+#' @param series_label_coordinates Set series label location manually. Expects a
+#'   data frame with 3 columns containing the series name (from the data column
+#'   headers), x and y coordinates in the format supplied in data. If NULL, the
+#'   default, locations are guessed using ggrepel.
 #' @param chart_seed Set random seed for [ggrepel::geom_text_repel()]. `ggrepel`
 #'   uses random numbers in the positioning algorithm. By setting a seed for the
 #'   random number generator the labels will be in the same place each time the
@@ -43,6 +47,7 @@ line_chart <- function(
     y_axis_breaks = ggplot2::waiver(),
     y_axis_labeller = scales::label_comma(),
     show_series_labels = TRUE,
+    series_label_coordinates = NULL,
     data_labeller = label_orr_comma(),
     chart_seed = 101
 ) {
@@ -68,6 +73,11 @@ line_chart <- function(
     y_limits <- c(0, max(y_axis_breaks))
   }
 
+  # Set font family and size
+  font_fam <- "Arial"
+  showtext::showtext_auto()
+  font_size <- 13
+
   # Remove names from colours
   base::names(series_colours) <- NULL
 
@@ -84,21 +94,76 @@ line_chart <- function(
     )
 
   # Pivot data into ggplot format
+  series_label_wrap_width <- 20
   plot_data <- data %>%
     tidyr::pivot_longer(- dplyr::all_of("date")) %>%
     dplyr::mutate(
       # Add series name labels at middle_date points
       series_label = base::ifelse(
         .data$date == middle_date & show_series_labels,
-        stringr::str_wrap(.data$name, 20),
+        stringr::str_wrap(.data$name, series_label_wrap_width),
         ""
       )
     )
 
-  # Set font family and size
-  font_fam <- "Arial"
-  showtext::showtext_auto()
-  font_size <- 13
+  # Create series labels geom_text
+  # Use ggrepel unless coordinates are specified
+  # Otherwise use supplied coordinates
+  # https://ggplot2-book.org/programming.html#multiple-components
+
+  geom_repel_series_labels <- ggrepel::geom_text_repel(
+    ggplot2::aes(label = .data$series_label),
+    family = font_fam,
+    size = font_size,
+    fontface = "bold",
+    # Set label anchor point to centre of label
+    hjust = "center",
+    vjust = "middle",
+    # Space around series labels - set to dodge lines
+    box.padding = 1,
+    point.padding = 1,
+    # Only move up and down to dodge lines
+    direction = "y",
+    # Don't show segment lines
+    min.segment.length = 100,
+    # Increased the default allowed overlaps for when lines are really close together.
+    max.overlaps = 20,
+    # Set line height for wrapped labels
+    lineheight = 0.25,
+    seed = chart_seed
+  )
+
+
+  # Use coords
+  geom_set_series_labels <- NULL
+  if(!is.null(series_label_coordinates)) {
+    series_label_loc <- series_label_coordinates[, 1:3]
+    names(series_label_loc) <- c("name", "date", "y")
+    series_label_loc <- series_label_loc %>%
+      dplyr::mutate(
+        series = stringr::str_wrap(.data$name, series_label_wrap_width)
+      )
+    geom_set_series_labels <- ggplot2::geom_text(
+      data = series_label_loc,
+      ggplot2::aes(
+        x = .data$date,
+        y = .data$y,
+        label = .data$series
+      ),
+      size = font_size,
+      fontface = "bold",
+      # Set label anchor point to centre of label
+      hjust = "center",
+      vjust = "middle",
+      lineheight = 0.25
+    )
+  }
+
+  geom_series_labels <- if(!is.null(series_label_coordinates)) {
+    geom_set_series_labels
+  } else {
+    geom_repel_series_labels
+  }
 
   plot <- ggplot2::ggplot(
     data = plot_data,
@@ -113,27 +178,28 @@ line_chart <- function(
     ggplot2::geom_point(ggplot2::aes(shape = .data$name)) +
     # Series labels
     # Use ggrepel to try to prevent them overlapping the lines and each other
-    ggrepel::geom_text_repel(
-      ggplot2::aes(label = .data$series_label),
-      family = font_fam,
-      size = font_size,
-      fontface = "bold",
-      # Set label anchor point to centre of label
-      hjust = "center",
-      vjust = "middle",
-      # Space around series labels - set to dodge lines
-      box.padding = 1,
-      point.padding = 1,
-      # Only move up and down to dodge lines
-      direction = "y",
-      # Don't show segment lines
-      min.segment.length = 100,
-      # Increased the default allowed overlaps for when lines are really close together.
-      max.overlaps = 20,
-      # Set line height for wrapped labels
-      lineheight = 0.25,
-      seed = chart_seed
-    ) +
+    # ggrepel::geom_text_repel(
+    #   ggplot2::aes(label = .data$series_label),
+    #   family = font_fam,
+    #   size = font_size,
+    #   fontface = "bold",
+    #   # Set label anchor point to centre of label
+    #   hjust = "center",
+    #   vjust = "middle",
+    #   # Space around series labels - set to dodge lines
+    #   box.padding = 1,
+    #   point.padding = 1,
+    #   # Only move up and down to dodge lines
+    #   direction = "y",
+    #   # Don't show segment lines
+    #   min.segment.length = 100,
+    #   # Increased the default allowed overlaps for when lines are really close together.
+    #   max.overlaps = 20,
+    #   # Set line height for wrapped labels
+    #   lineheight = 0.25,
+    #   seed = chart_seed
+    # ) +
+    geom_series_labels +
     # Last point data labels
     ggrepel::geom_text_repel(
       data = last_points,
