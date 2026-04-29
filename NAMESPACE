@@ -2,6 +2,8 @@
 
 export("%>%")
 export(bar_chart)
+export(board_report_gb_line_chart)
+export(board_report_region_bars)
 export(grouped_side_by_side_bar)
 export(label_orr_comma)
 export(label_orr_percent)

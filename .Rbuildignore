@@ -3,3 +3,5 @@
 .docx
 .png
 ^LICENSE\.md$
+^\.positai$
+^\.claude$
