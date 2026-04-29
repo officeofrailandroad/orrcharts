@@ -68,7 +68,7 @@ bar_chart <- function(
   bplt <- ggplot2::ggplot(
     data = plot_data,
     ggplot2::aes(x = .data$category, y = .data$value, fill = .data$name)) +
-    ggplot2::geom_col() +
+    ggplot2::geom_col(colour = "white", linewidth = ggplot2::rel(0.3)) +
     ggplot2::geom_text(
       ggplot2::aes(label = .data$data_label, colour = .data$name),
       # Put labels in the middle of the bars
