@@ -4,3 +4,6 @@
 .Ruserdata
 .docx
 .positai
+inst/doc
+/doc/
+/Meta/

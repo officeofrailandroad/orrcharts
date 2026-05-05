@@ -1,0 +1,192 @@
+---
+title: "ORR charts examples"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ORR charts examples}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(orrcharts)
+set.seed(101) # Fix random seed
+
+image_dir = "img" # set the directory to save chart PNGs
+
+# Create directory to hold images if not exists
+if(!dir.exists(image_dir)) dir.create(image_dir)
+```
+
+## Bar chart
+
+A simple stacked bar chart with data labels.
+
+The `bar_chart` function expects a data frame with at least 2 columns. The first column sets the x-axis. Subsequent columns set the values which determine the height of sections in stacked bars.
+
+The format for the data labels can be controlled using the `data_labeller` argument. They are positioned in the centre of bar sections and coloured black or white to maximise contrast with the bar fill colour. The names of the columns which set the stack colours are displayed in a legend at the top of the chart. If the columns have long names they are wrapped into new lines automatically.
+
+
+```{r bar_chart}
+demo_bar_data <- dplyr::tibble(
+  year = c("2020/21","2021/22","2022/23","2023/24","2024/25","2025/26"),
+  `Category A` = rnorm(6, 20, 5),
+  `Category B` = rnorm(6, 20, 5)
+)
+
+bar_chart(
+  data = demo_bar_data,
+  filename = "demo_bar_chart.png",
+  path = image_dir,
+  # Set the y-axis breaks
+  y_axis_breaks = seq(from = 0, to = 60, by = 20),
+  # Set the bar colours
+  bar_colours = c("#253268","#8787C9") # default is ORR colours
+)
+
+```
+
+```{r out.width = '100%', echo = FALSE}
+# Display the chart
+knitr::include_graphics("img/demo_bar_chart.png")
+```
+
+## Line chart
+
+A simple line chart with series and last point data labels, used to plot time series.
+
+The `line_chart` functions expects a data frame with at least 2 columns. The first column sets the x-axis, this is usually a date or time period. Each subsequent column sets the values for the line series - the column names are used as series labels.
+
+The series and data labels use `ggrepel::geom_text_repel()` to avoid overlapping points and other labels. This algorithm uses random numbers and is not always perfect.
+
+
+```{r line_chart}
+# Make a line chart with the same data as above
+line_chart(
+  data = demo_bar_data,
+  filename = "demo_line_chart.png",
+  path = image_dir,
+  # Set the y-axis breaks again
+  y_axis_breaks = seq(from = 0, to = 40, by = 10)
+)
+
+```
+
+```{r out.width = '100%', echo = FALSE}
+# Display the chart
+knitr::include_graphics("img/demo_line_chart.png")
+```
+
+
+## Quarterly bar chart
+
+Plot a bar chart with bars grouped by financial year and a data label of the final bar.
+
+This chart expects a data frame of two columns. The first column hold financial quarter keys (of the form `20253` or `202520263`) and the second column contains the value which sets the height of the bars.
+
+The `y_axis_breaks` argument allows the user to specify where y-axis lines should occur, and `y_axis_labeller` expect a function which controls how the axis labels should be displayed.
+
+```{r quarterly_bar}
+
+demo_qrtly_bar_data <- dplyr::tibble(
+  # make yyyyq format
+  financial_quarter_key = 10 * rep(2020:2025, each = 4) + rep(1:4, times = 6),
+  # create some random data
+  value = rnorm(24, 70, 10)
+)
+
+quarterly_bar(
+  data = demo_qrtly_bar_data,
+  filename = "demo_quarterly_bar.png",
+  path = image_dir,
+  # Set where the y-axis lines appear
+  y_axis_breaks = seq(from = 0, to = 100, by = 20),
+  # Function to style the y-axis labels (with % symbols)
+  y_axis_labeller = scales::label_percent(scale = 1, accuracy = 1),
+  # Function to style the data label (% and 1dp if < 1)
+  last_point_labeller = label_orr_percent(),
+  # Move the data label to the right to avoid overlap
+  h_nudge_data_label = -0.2
+)
+```
+
+
+```{r out.width = '100%', echo = FALSE}
+# Display the chart
+knitr::include_graphics("img/demo_quarterly_bar.png")
+```
+
+## Side-by-side bar chart
+
+Many stats releases use side-by-side bar charts to compare metrics and their from the previous year across categories, such as train operators. 
+
+The `side_by_side_bar` function expects a data frame with 3 columns:
+1. The category, typically train operating company name
+2. The value, which populates the left-hand bars
+3. The change in the value (either in percent or percentage points), which sets the right-hand bars.
+
+```{r side_by_side_bar}
+
+# Dummy values and changes for TOCs
+demo_toc_side_by_side <- dplyr::tibble(
+  year = c("Avanti","GWR","Lumo","ScotRail","Southeastern","Grand Central","Greater Anglia","GTR","Northern","c2c"),
+  value = rnorm(10, 20, 5),
+  change = rnorm(10, 0, 10)
+)
+
+
+side_by_side_bar(
+  data = demo_toc_side_by_side,
+  filename = "demo_side_by_side_bar.png",
+  path = image_dir,
+  # set the titles above the bars
+  left_bar_title = "Value (thousands), Jan to Mar 2026",
+  right_bar_title = "Change from Jan to Mar 2025"
+)
+
+```
+
+```{r out.width = '100%', echo = FALSE}
+# Display the chart
+knitr::include_graphics("img/demo_side_by_side_bar.png")
+```
+
+
+## Grouped side-by-side bar chart
+
+```{r grouped_side_by_side} 
+
+demo_grpd_side_by_side_data <- dplyr::tibble(
+  ticket_type = c("Advance", "Anytime or Peak", "Off-Peak", "Season"),
+  group = c("Ordinary fare tickets", "Ordinary fare tickets", "Ordinary fare tickets", "Season"),
+  journeys = c(35.9, 147, 215, 61.3),
+  change = c(4.8, 5.2, 4.1, 2.2)
+)
+
+grouped_side_by_side_bar(
+  data = demo_grpd_side_by_side_data,
+  filename = "demo_grouped_side_by_side_bar.png",
+  path = image_dir,
+  # Set titles
+  left_bar_title = "Passenger journeys in Oct to Dec 2025",
+  right_bar_title = "Change in journeys from Oct to Dec 2024",
+  # add m suffix to journeys
+  left_bar_labeller = scales::label_number(suffix = "m"),
+  # percentage to 1dp
+  right_bar_labeller = scales::label_percent(scale = 1, accuracy = 0.1)
+)
+
+```
+
+```{r out.width = '100%', echo = FALSE}
+# Display the chart
+knitr::include_graphics("img/demo_grouped_side_by_side_bar.png")
+```
+
+

@@ -92,7 +92,7 @@ grouped_side_by_side_bar <- function(
 
   # Put the group labels in the plot data as empty rows
   plot_data <- sort_data %>%
-    dplyr::select(-.data$group) %>%
+    dplyr::select(-tidyselect::any_of("group")) %>%
     dplyr::bind_rows(plot_groups_data) %>%
     dplyr::group_by(.data$group_id) %>%
     dplyr::mutate(

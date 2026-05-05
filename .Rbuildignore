@@ -5,3 +5,5 @@
 ^LICENSE\.md$
 ^\.positai$
 ^\.claude$
+^doc$
+^Meta$
