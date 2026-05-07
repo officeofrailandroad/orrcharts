@@ -57,6 +57,31 @@ bar_chart(
 knitr::include_graphics("img/demo_bar_chart.png")
 ```
 
+
+## Horizontal bar chart
+
+```{r horizontal_bar}
+
+demo_horiz_bar <- dplyr::tibble(
+      foc = c("Freightliner Group","GB Railfreight","DB Cargo UK","Direct Rail Services","Colas Freight","Devon and Cornwall Railways"),
+      val = c(39.2, 32.3, 20.3, 4.7, 2.5, 0.9)
+    )
+
+horizontal_bar(
+  data = demo_horiz_bar,
+  filename = "demo_horizontal_bar.png",
+  path = image_dir,
+  data_labeller = scales::label_percent(scale = 1, accuracy = 0.1)
+)
+
+```
+
+```{r out.width = '100%', echo = FALSE}
+# Display the chart
+knitr::include_graphics("img/demo_horizontal_bar.png")
+```
+
+
 ## Line chart
 
 A simple line chart with series and last point data labels, used to plot time series.
