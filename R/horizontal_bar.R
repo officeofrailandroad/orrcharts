@@ -15,7 +15,7 @@
 horizontal_bar <- function(
     data,
     filename,
-    path,
+    path = NULL,
     chart_width = 6.7,
     chart_height = 3.567,
     data_labeller = scales::label_number(),
@@ -120,7 +120,11 @@ horizontal_bar <- function(
     ggplot2::guides(colour = "none", fill = fill_legend) +
     ggplot2::theme(
       text = ggplot2::element_text(family = font_fam, size = (font_size * ggplot2::.pt)),
-      axis.text = ggplot2::element_text(size = ggplot2::rel(1), lineheight = 0.25),
+      axis.text = ggplot2::element_text(
+        size = ggplot2::rel(1),
+        lineheight = 0.25
+      ),
+      axis.text.y = ggplot2::element_text(margin = ggplot2::margin(t = 0, r = 5, b = 0, l = 0)),
       axis.text.x = ggplot2::element_blank(),
       axis.line.x = ggplot2::element_blank(),
       axis.ticks.x = ggplot2::element_blank(),
