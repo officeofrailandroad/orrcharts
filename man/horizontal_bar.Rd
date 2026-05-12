@@ -11,8 +11,11 @@ horizontal_bar(
   chart_width = 6.7,
   chart_height = 3.567,
   data_labeller = scales::label_number(),
+  bar_colours = orr_colours(),
   outside_bar_threshold = 0.1,
-  outside_bar_distance = 0.05
+  outside_bar_distance = 0.05,
+  show_legend = FALSE,
+  legend_position = c(0.8, 0.2)
 )
 }
 \arguments{
@@ -30,12 +33,19 @@ working directory.}
 
 \item{data_labeller}{A function which controls how the data labels over the bars are displayed.}
 
+\item{bar_colours}{An array of colour hex-codes. Defaults to ORR colours.}
+
 \item{outside_bar_threshold}{Controls when a data label is placed inside or
 outside the bar. Increase the value if data labels look cramped in small
 bars.}
 
 \item{outside_bar_distance}{Controls how far outside the bar labels are
 shown. Increase to move further from the bar.}
+
+\item{show_legend}{Should the legend be shown on the chart. Defaults to \code{TRUE}.}
+
+\item{legend_position}{Set location of the legend in the plot. Default is
+bottom right. c(0,0) is bottom left.}
 }
 \description{
 A simple horizontal bar chart to display a single set of values
