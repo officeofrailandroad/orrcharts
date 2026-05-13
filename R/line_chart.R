@@ -59,12 +59,22 @@ line_chart <- function(
   # Fix first column name
   colnames(data)[1] <- "date"
 
+  # Use a row number for continuous scale on x axis. This allows minor tick marks to be shown
+  data <- data %>%
+    dplyr::mutate(
+      x_id = dplyr::row_number()
+    )
+
   # Setup labels for the x axis - only show labels specified
   x_dates <- data$date
-  x_breaks <- base::ifelse(
-    x_dates %in% x_axis_labels | base::length(x_axis_labels) == 0,
-    x_dates,
-    "")
+  n_dates <- length(x_dates)
+  x_breaks <- 1:n_dates
+  x_labels <- x_dates
+  # If x axis labels are specified, calculate where they are
+  if (length(x_axis_labels) > 0) {
+    x_breaks <- which(x_dates %in% x_axis_labels) # locations of desired x axis labels
+    x_labels <- x_axis_labels
+  }
 
   # Set y-axis limits
   y_limits <- NULL
@@ -87,7 +97,7 @@ line_chart <- function(
   # Get the last point in each series for data labels
   last_points <- data %>%
     dplyr::slice_tail(n = 1) %>%
-    tidyr::pivot_longer(- dplyr::all_of("date")) %>%
+    tidyr::pivot_longer(- dplyr::all_of(c("x_id", "date"))) %>%
     dplyr::mutate(
       # Create the data label to be displayed
       label = data_labeller(.data$value)
@@ -96,7 +106,7 @@ line_chart <- function(
   # Pivot data into ggplot format
   series_label_wrap_width <- 20
   plot_data <- data %>%
-    tidyr::pivot_longer(- dplyr::all_of("date")) %>%
+    tidyr::pivot_longer(- dplyr::all_of(c("x_id", "date"))) %>%
     dplyr::mutate(
       # Add series name labels at middle_date points
       series_label = base::ifelse(
@@ -143,12 +153,16 @@ line_chart <- function(
       dplyr::mutate(
         series = stringr::str_wrap(.data$name, series_label_wrap_width)
       )
+    # Find x axis ID for specified coordinates
+    series_label_loc$x_id <- match(series_label_loc$date, x_dates)
     geom_set_series_labels <- ggplot2::geom_text(
       data = series_label_loc,
       ggplot2::aes(
-        x = .data$date,
+        x = .data$x_id,
         y = .data$y,
-        label = .data$series
+        label = .data$series,
+        colour = .data$name,
+        group = .data$name
       ),
       size = font_size,
       fontface = "bold",
@@ -168,7 +182,7 @@ line_chart <- function(
   plot <- ggplot2::ggplot(
     data = plot_data,
     ggplot2::aes(
-      x = .data$date,
+      x = .data$x_id,
       y = .data$value,
       colour = .data$name,
       group = .data$name
@@ -218,10 +232,12 @@ line_chart <- function(
       seed = chart_seed
     ) +
     ggplot2::theme_classic() +
-    ggplot2::scale_x_discrete(
+    ggplot2::scale_x_continuous(
       name = NULL,
-      breaks = x_dates,
-      labels = x_breaks,
+      breaks = x_breaks,
+      labels = x_labels,
+      minor_breaks = 1:n_dates,
+      guide = ggplot2::guide_axis(minor.ticks = TRUE),
       expand = ggplot2::expansion(mult = c(0,0.1)) # expand end of x-axis to fit data labels.
     ) +
     ggplot2::scale_y_continuous(
@@ -238,7 +254,11 @@ line_chart <- function(
     ggplot2::theme(
       text = ggplot2::element_text(family = font_fam, size = (font_size * ggplot2::.pt)),
       axis.text = ggplot2::element_text(size = ggplot2::rel(1)),
-      panel.grid.major.y = ggplot2::element_line(color = "grey90") # set y axis lines to light grey
+      panel.grid.major.y = ggplot2::element_line(color = "grey90"), # set y axis lines to light grey,
+      # Set x axis tick lengths
+      axis.ticks.length.x = grid::unit(.3, "cm"),
+      axis.minor.ticks.x.bottom = ggplot2::element_line(),
+      axis.minor.ticks.length = ggplot2::rel(0.5)
     )
 
   ggplot2::ggsave(
