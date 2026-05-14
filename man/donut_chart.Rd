@@ -11,7 +11,8 @@ donut_chart(
   chart_width = 6.7,
   chart_height = 3.567,
   colours = orr_colours(),
-  data_labeller = scales::label_number(scale = 1, accuracy = 1)
+  data_labeller = scales::label_number(scale = 1, accuracy = 1),
+  labels_gap_size = 1
 )
 }
 \arguments{
@@ -30,6 +31,9 @@ working directory.}
 \item{colours}{The colours for the donut sections. Defaults to ORR colours.}
 
 \item{data_labeller}{A function which controls how the data labels over the bars are displayed.}
+
+\item{labels_gap_size}{Gap between the outside of the donut and the centre of
+the text labels.}
 }
 \description{
 A simple donut chart.

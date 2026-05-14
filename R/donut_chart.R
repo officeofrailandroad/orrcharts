@@ -5,6 +5,8 @@
 #' A simple donut chart.
 #' @inheritParams bar_chart
 #' @param colours The colours for the donut sections. Defaults to ORR colours.
+#' @param labels_gap_size Gap between the outside of the donut and the centre of
+#'   the text labels.
 #' @export
 donut_chart <- function(
     data,
@@ -13,11 +15,15 @@ donut_chart <- function(
     chart_width = 6.7,
     chart_height = 3.567,
     colours = orr_colours(),
-    data_labeller = scales::label_number(scale = 1, accuracy = 1)
+    data_labeller = scales::label_number(scale = 1, accuracy = 1),
+    labels_gap_size = 1
     ) {
   # Check input parameters
   assert_chart_params(
     data, filename, path, chart_width, chart_height, colours, data_labeller
+  )
+  assertthat::assert_that(
+    assertthat::is.scalar(labels_gap_size)
   )
 
   # Fix the size and names of the data
@@ -41,21 +47,25 @@ donut_chart <- function(
   showtext::showtext_auto()
   font_size <- 13
 
+  donut_hole_size <- 2
+  donut_ring_width <- 2
+
+
   dplt <- plot_data %>%
     ggplot2::ggplot(
       ggplot2::aes(
         fill = .data$category,
         ymax = .data$ymax,
         ymin = .data$ymin,
-        xmax = 4,
-        xmin = 2
+        xmax = donut_hole_size + donut_ring_width,
+        xmin = donut_hole_size
       )
     ) +
     ggplot2::geom_rect(colour = "white") +
     ggplot2::geom_text(
       ggplot2::aes(
         y = (.data$ymax + .data$ymin) / 2,
-        x = 6,
+        x = (donut_hole_size + donut_ring_width) + labels_gap_size,
         label = .data$label,
         colour = .data$category
       ),
