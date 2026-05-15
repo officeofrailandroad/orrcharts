@@ -104,10 +104,12 @@ side_by_side_bar <- function(
   font_size <- 13
 
   # Set the titles for each chart
-  title_char_width <- 26
+  left_title_char_width <- 26
+  right_title_char_width <- 24
+
   col_titles <- c(
-    "value" = stringr::str_wrap(left_bar_title, width = title_char_width),
-    "change" = stringr::str_wrap(right_bar_title, width = title_char_width)
+    "value" = stringr::str_wrap(left_bar_title, width = left_title_char_width),
+    "change" = stringr::str_wrap(right_bar_title, width = right_title_char_width)
   )
 
   # Set the bar colours
