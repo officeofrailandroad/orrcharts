@@ -12,7 +12,8 @@ donut_chart(
   chart_height = 3.567,
   colours = orr_colours(),
   data_labeller = scales::label_number(scale = 1, accuracy = 1),
-  labels_gap_size = 1
+  labels_gap_size = 1,
+  as_pie_chart = FALSE
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ working directory.}
 
 \item{labels_gap_size}{Gap between the outside of the donut and the centre of
 the text labels.}
+
+\item{as_pie_chart}{If true will remove hole in donut and show as pie chart.}
 }
 \description{
 A simple donut chart.

@@ -7,6 +7,7 @@
 #' @param colours The colours for the donut sections. Defaults to ORR colours.
 #' @param labels_gap_size Gap between the outside of the donut and the centre of
 #'   the text labels.
+#' @param as_pie_chart If true will remove hole in donut and show as pie chart.
 #' @export
 donut_chart <- function(
     data,
@@ -16,7 +17,8 @@ donut_chart <- function(
     chart_height = 3.567,
     colours = orr_colours(),
     data_labeller = scales::label_number(scale = 1, accuracy = 1),
-    labels_gap_size = 1
+    labels_gap_size = 1,
+    as_pie_chart = FALSE
     ) {
   # Check input parameters
   assert_chart_params(
@@ -24,6 +26,9 @@ donut_chart <- function(
   )
   assertthat::assert_that(
     assertthat::is.scalar(labels_gap_size)
+  )
+  assertthat::assert_that(
+    assertthat::is.flag(as_pie_chart)
   )
 
   # Fix the size and names of the data
@@ -47,7 +52,7 @@ donut_chart <- function(
   showtext::showtext_auto()
   font_size <- 13
 
-  donut_hole_size <- 2
+  donut_hole_size <- ifelse(as_pie_chart, 0, 2)
   donut_ring_width <- 2
 
 
