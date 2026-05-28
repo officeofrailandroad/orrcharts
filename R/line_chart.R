@@ -25,6 +25,8 @@
 #'   data frame with 3 columns containing the series name (from the data column
 #'   headers), x and y coordinates in the format supplied in data. If NULL, the
 #'   default, locations are guessed using ggrepel.
+#' @param nudge_y_data_label Manually shift data labels up or down for fine
+#'   tweaks. Value is based on y-axis values.
 #' @param chart_seed Set random seed for [ggrepel::geom_text_repel()]. `ggrepel`
 #'   uses random numbers in the positioning algorithm. By setting a seed for the
 #'   random number generator the labels will be in the same place each time the
@@ -49,6 +51,7 @@ line_chart <- function(
     show_series_labels = TRUE,
     series_label_coordinates = NULL,
     data_labeller = label_orr_comma(),
+    nudge_y_data_label = 0,
     chart_seed = 101
 ) {
   assert_chart_params(
@@ -225,6 +228,7 @@ line_chart <- function(
       vjust = "middle",
       # Only move up and down to dodge lines
       direction = "y",
+      nudge_y = nudge_y_data_label,
       # Don't show segment lines
       min.segment.length = 100,
       box.padding = 0.1,

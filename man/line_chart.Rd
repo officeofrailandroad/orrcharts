@@ -18,6 +18,7 @@ line_chart(
   show_series_labels = TRUE,
   series_label_coordinates = NULL,
   data_labeller = label_orr_comma(),
+  nudge_y_data_label = 0,
   chart_seed = 101
 )
 }
@@ -61,6 +62,9 @@ default, locations are guessed using ggrepel.}
 
 \item{data_labeller}{Function which controls how the data labels are
 displayed.}
+
+\item{nudge_y_data_label}{Manually shift data labels up or down for fine
+tweaks. Value is based on y-axis values.}
 
 \item{chart_seed}{Set random seed for \code{\link[ggrepel:geom_text_repel]{ggrepel::geom_text_repel()}}. \code{ggrepel}
 uses random numbers in the positioning algorithm. By setting a seed for the
