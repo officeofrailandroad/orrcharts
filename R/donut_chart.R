@@ -53,7 +53,7 @@ donut_chart <- function(
   font_size <- 13
 
   donut_hole_size <- ifelse(as_pie_chart, 0, 2)
-  donut_ring_width <- 2
+  donut_ring_width <- 4
 
 
   dplt <- plot_data %>%
@@ -62,7 +62,7 @@ donut_chart <- function(
         fill = .data$category,
         ymax = .data$ymax,
         ymin = .data$ymin,
-        xmax = donut_hole_size + donut_ring_width,
+        xmax = donut_ring_width,
         xmin = donut_hole_size
       )
     ) +
