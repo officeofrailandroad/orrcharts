@@ -34,13 +34,22 @@ bar_chart <- function(
 
   # Set name of first column of data
   base::colnames(data)[1] <- "category"
+  value_type_names <- colnames(data)[2:ncol(data)]
+  category_names <- data$category
 
   # Remove names from list of colours - it interferes with ggplot
   base::names(bar_colours) <- NULL
 
+  # Check there are enough colours
+  assertthat::assert_that(
+    length(bar_colours) >= length(value_type_names),
+    msg = "Not enough bar colours supplied for the number of columns"
+  )
+
   # Calculate if black or white text will have best contrast with bar colours
   bar_hcl <- farver::decode_colour(bar_colours, "rgb", "hcl")
   text_colours <- base::ifelse(bar_hcl[, "l"] > 50, "black", "white")
+  names(text_colours)[1:length(value_type_names)] <- value_type_names
 
   # Set y-axis limits
   y_limits <- NULL
@@ -71,24 +80,74 @@ bar_chart <- function(
   showtext::showtext_auto()
   font_size <- 13
 
+  # Thresholds for data labels outside bars
+  outside_bar_threshold <- 0.1
+  outside_bar_distance <- 0.05
+
   plot_data <- data %>%
     tidyr::pivot_longer(- dplyr::all_of("category")) %>%
     dplyr::mutate(
+      # Fix category and stacked values order
+      category = factor(.data$category, levels = category_names, ordered = TRUE),
+      name = factor(.data$name, levels = value_type_names, ordered = TRUE),
       data_label = data_labeller(.data$value),
       # Hide zero value data labels
       data_label = ifelse(.data$value == 0, NA_character_, .data$data_label),
       # Wrap long category names to display better in the legend
-      name = stringr::str_wrap(.data$name, width = 20)
+      # name_label = stringr::str_wrap(.data$name, width = 20),
+    ) %>%
+    dplyr::group_by(.data$category) %>%
+    dplyr::arrange(.data$name) %>%
+    dplyr::mutate(
+      # Total for all categories that will be stacked
+      category_value_sum = sum(.data$value, na.rm = TRUE),
+      value_max_point = cumsum(.data$value),
+      value_min_point = .data$value_max_point - .data$value,
+      value_mid_point = .data$value_min_point + (.data$value_max_point - .data$value_min_point) / 2
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(
+      # Figure out bar range for dodging data labels in small bars
+      cat_value_max = max(.data$category_value_sum, 0),
+      cat_value_min = min(.data$category_value_sum, 0),
+      value_range = .data$cat_value_max - .data$cat_value_min,
+      label_outside = (abs(.data$value) / .data$value_range < outside_bar_threshold),
+      # Set data label position
+      label_y = ifelse(
+        .data$label_outside,
+        .data$value_max_point + outside_bar_distance * .data$value_range,
+        .data$value_mid_point
+      ),
+      label_colour_group = ifelse(
+        .data$label_outside,
+        "_outside",
+        as.character(.data$name)
+      )
     )
+
+  # Add outside labels to text colour mapping
+  text_colours <- c(`_outside` = "black", text_colours)
 
   bplt <- ggplot2::ggplot(
     data = plot_data,
-    ggplot2::aes(x = .data$category, y = .data$value, fill = .data$name)) +
-    ggplot2::geom_col(colour = "white", linewidth = ggplot2::rel(0.3)) +
+    ggplot2::aes(x = .data$category, y = .data$value)) +
+    ggplot2::geom_col(
+      ggplot2::aes(
+        y = .data$value,
+        fill = .data$name
+      ),
+      colour = "white",
+      linewidth = ggplot2::rel(0.3),
+      position = ggplot2::position_stack(reverse = TRUE)
+    ) +
     ggplot2::geom_text(
-      ggplot2::aes(label = .data$data_label, colour = .data$name),
+      ggplot2::aes(
+        y = .data$label_y,
+        label = .data$data_label,
+        colour = .data$label_colour_group
+      ),
       # Put labels in the middle of the bars
-      position = ggplot2::position_stack(vjust = 0.5),
+      # position = ggplot2::position_stack(reverse = TRUE),
       family = font_fam,
       size = font_size,
       na.rm = TRUE
@@ -105,7 +164,7 @@ bar_chart <- function(
       name = NULL,
       labels = x_axis_labels
     ) +
-    ggplot2::scale_fill_manual(values = bar_colours) +
+    ggplot2::scale_fill_manual(values = bar_colours, labels = function(x) stringr::str_wrap(x, width = 20)) +
     ggplot2::scale_colour_manual(values = text_colours) +
     ggplot2::guides(colour = "none", fill = fill_legend) +
     ggplot2::theme(
