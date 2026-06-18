@@ -15,7 +15,8 @@ bar_chart(
   y_axis_labeller = scales::label_comma(),
   x_axis_labels = ggplot2::waiver(),
   data_labeller = label_orr_comma(),
-  show_legend = TRUE
+  show_legend = TRUE,
+  hide_y_axis = FALSE
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ use ggplot2 default.}
 \item{data_labeller}{A function which controls how the data labels over the bars are displayed.}
 
 \item{show_legend}{Should the legend be shown on the chart. Defaults to \code{TRUE}.}
+
+\item{hide_y_axis}{If \code{TRUE} will remove y axis line, title and grid lines. Defaults to \code{FALSE}.}
 }
 \description{
 A simple or stacked bar chart in ORR style.

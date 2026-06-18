@@ -9,6 +9,7 @@
 #' @param x_axis_labels Array of labels to display on the x-axis
 #' @param data_labeller A function which controls how the data labels over the bars are displayed.
 #' @param show_legend Should the legend be shown on the chart. Defaults to `TRUE`.
+#' @param hide_y_axis If `TRUE` will remove y axis line, title and grid lines. Defaults to `FALSE`.
 #' @export
 bar_chart <- function(
     data,
@@ -21,13 +22,15 @@ bar_chart <- function(
     y_axis_labeller = scales::label_comma(),
     x_axis_labels = ggplot2::waiver(),
     data_labeller = label_orr_comma(),
-    show_legend = TRUE
+    show_legend = TRUE,
+    hide_y_axis = FALSE
 ) {
   # Check input parameters
   assert_chart_params(
     data, filename, path, chart_width, chart_height, bar_colours, y_axis_breaks,
     y_axis_labeller, data_labeller, show_legend
   )
+  assertthat::assert_that(assertthat::is.flag(hide_y_axis))
 
   # Set name of first column of data
   base::colnames(data)[1] <- "category"
@@ -49,6 +52,19 @@ bar_chart <- function(
   # Should legend be shown
   fill_legend = "none"
   if(show_legend) fill_legend <- "legend"
+
+  # Should y axis and lines be hidden
+  y_axis_theme <- ggplot2::theme()
+  if (hide_y_axis) {
+    y_axis_theme <- ggplot2::theme(
+      axis.title.y = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_blank(),
+      axis.ticks.y = ggplot2::element_blank(),
+      axis.line.y = ggplot2::element_blank(),
+      panel.grid.major.y = ggplot2::element_blank(),
+      panel.grid.minor.y = ggplot2::element_blank()
+    )
+  }
 
   # Set font family and size
   font_fam <- "Arial"
@@ -105,7 +121,8 @@ bar_chart <- function(
       # Remove legend background
       legend.background = ggplot2::element_blank(),
       legend.key = ggplot2::element_blank()
-    )
+    ) +
+    y_axis_theme
 
   ggplot2::ggsave(
     filename = filename,
