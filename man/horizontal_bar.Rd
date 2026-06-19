@@ -31,7 +31,8 @@ working directory.}
 
 \item{chart_width, chart_height}{Width and height in inches of the PNG output}
 
-\item{data_labeller}{A function which controls how the data labels over the bars are displayed.}
+\item{data_labeller}{A function which controls how the data labels over the
+bars are displayed.}
 
 \item{bar_colours}{An array of colour hex-codes. Defaults to ORR colours.}
 
@@ -42,7 +43,8 @@ bars.}
 \item{outside_bar_distance}{Controls how far outside the bar labels are
 shown. Increase to move further from the bar.}
 
-\item{show_legend}{Should the legend be shown on the chart. Defaults to \code{TRUE}.}
+\item{show_legend}{Should the legend be shown on the chart. Defaults to
+\code{TRUE}.}
 
 \item{legend_position}{Set location of the legend in the plot. Default is
 bottom right. c(0,0) is bottom left.}

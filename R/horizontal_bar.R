@@ -4,11 +4,6 @@
 #'
 #' A simple horizontal bar chart to display a single set of values
 #' @inheritParams bar_chart
-#' @param outside_bar_threshold Controls when a data label is placed inside or
-#'   outside the bar. Increase the value if data labels look cramped in small
-#'   bars.
-#' @param outside_bar_distance Controls how far outside the bar labels are
-#'   shown. Increase to move further from the bar.
 #' @param legend_position Set location of the legend in the plot. Default is
 #'   bottom right. c(0,0) is bottom left.
 #' @export

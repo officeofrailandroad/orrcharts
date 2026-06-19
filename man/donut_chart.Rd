@@ -31,7 +31,8 @@ working directory.}
 
 \item{colours}{The colours for the donut sections. Defaults to ORR colours.}
 
-\item{data_labeller}{A function which controls how the data labels over the bars are displayed.}
+\item{data_labeller}{A function which controls how the data labels over the
+bars are displayed.}
 
 \item{labels_gap_size}{Gap between the outside of the donut and the centre of
 the text labels.}

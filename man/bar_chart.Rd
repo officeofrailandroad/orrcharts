@@ -16,7 +16,9 @@ bar_chart(
   x_axis_labels = ggplot2::waiver(),
   data_labeller = label_orr_comma(),
   show_legend = TRUE,
-  hide_y_axis = FALSE
+  hide_y_axis = FALSE,
+  outside_bar_threshold = 0,
+  outside_bar_distance = 0.05
 )
 }
 \arguments{
@@ -41,11 +43,21 @@ use ggplot2 default.}
 
 \item{x_axis_labels}{Array of labels to display on the x-axis}
 
-\item{data_labeller}{A function which controls how the data labels over the bars are displayed.}
+\item{data_labeller}{A function which controls how the data labels over the
+bars are displayed.}
 
-\item{show_legend}{Should the legend be shown on the chart. Defaults to \code{TRUE}.}
+\item{show_legend}{Should the legend be shown on the chart. Defaults to
+\code{TRUE}.}
 
-\item{hide_y_axis}{If \code{TRUE} will remove y axis line, title and grid lines. Defaults to \code{FALSE}.}
+\item{hide_y_axis}{If \code{TRUE} will remove y axis line, title and grid lines.
+Defaults to \code{FALSE}.}
+
+\item{outside_bar_threshold}{Controls when a data label is placed inside or
+outside the bar. Increase the value if data labels look cramped in small
+bars.}
+
+\item{outside_bar_distance}{Controls how far outside the bar labels are
+shown. Increase to move further from the bar.}
 }
 \description{
 A simple or stacked bar chart in ORR style.

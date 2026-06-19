@@ -7,9 +7,17 @@
 #' @inheritParams quarterly_bar
 #' @param bar_colours An array of colour hex-codes. Defaults to ORR colours.
 #' @param x_axis_labels Array of labels to display on the x-axis
-#' @param data_labeller A function which controls how the data labels over the bars are displayed.
-#' @param show_legend Should the legend be shown on the chart. Defaults to `TRUE`.
-#' @param hide_y_axis If `TRUE` will remove y axis line, title and grid lines. Defaults to `FALSE`.
+#' @param data_labeller A function which controls how the data labels over the
+#'   bars are displayed.
+#' @param show_legend Should the legend be shown on the chart. Defaults to
+#'   `TRUE`.
+#' @param hide_y_axis If `TRUE` will remove y axis line, title and grid lines.
+#'   Defaults to `FALSE`.
+#' @param outside_bar_threshold Controls when a data label is placed inside or
+#'   outside the bar. Increase the value if data labels look cramped in small
+#'   bars.
+#' @param outside_bar_distance Controls how far outside the bar labels are
+#'   shown. Increase to move further from the bar.
 #' @export
 bar_chart <- function(
     data,
@@ -23,7 +31,9 @@ bar_chart <- function(
     x_axis_labels = ggplot2::waiver(),
     data_labeller = label_orr_comma(),
     show_legend = TRUE,
-    hide_y_axis = FALSE
+    hide_y_axis = FALSE,
+    outside_bar_threshold = 0,
+    outside_bar_distance = 0.05
 ) {
   # Check input parameters
   assert_chart_params(
@@ -31,6 +41,13 @@ bar_chart <- function(
     y_axis_labeller, data_labeller, show_legend
   )
   assertthat::assert_that(assertthat::is.flag(hide_y_axis))
+  assertthat::assert_that(
+    assertthat::is.scalar(outside_bar_threshold),
+    assertthat::is.scalar(outside_bar_distance),
+    outside_bar_threshold >= 0,
+    outside_bar_distance >= 0,
+    msg = "outside_bar_threshold and outside_bar_distance must be single non-negative numbers"
+  )
 
   # Set name of first column of data
   base::colnames(data)[1] <- "category"
@@ -79,10 +96,6 @@ bar_chart <- function(
   font_fam <- "Arial"
   showtext::showtext_auto()
   font_size <- 13
-
-  # Thresholds for data labels outside bars
-  outside_bar_threshold <- 0.1
-  outside_bar_distance <- 0.05
 
   plot_data <- data %>%
     tidyr::pivot_longer(- dplyr::all_of("category")) %>%
@@ -168,15 +181,19 @@ bar_chart <- function(
     ggplot2::scale_colour_manual(values = text_colours) +
     ggplot2::guides(colour = "none", fill = fill_legend) +
     ggplot2::theme(
+      plot.margin = ggplot2::margin_auto(0),
       text = ggplot2::element_text(family = font_fam, size = (font_size * ggplot2::.pt)),
       axis.text = ggplot2::element_text(size = ggplot2::rel(1)),
       panel.grid.major.y = ggplot2::element_line(color = "grey90"),
       axis.ticks.x = ggplot2::element_blank(), # No x-axis ticks
       legend.direction = "horizontal", # Layout legend categories horizontally
-      legend.position = "inside",
-      legend.position.inside = c(0.5,0.95), # Legend centered and near top
+      legend.position = "top",
+      # legend.position.inside = c(0.5,0.95), # Legend centered and near top
       legend.text = ggplot2::element_text(lineheight = 0.25, size = ggplot2::rel(1)),
       legend.title = ggplot2::element_blank(), # No legend title
+      legend.margin = ggplot2::margin_auto(0),
+      legend.box.spacing = ggplot2::rel(0),
+      legend.spacing.y = ggplot2::rel(0),
       # Remove legend background
       legend.background = ggplot2::element_blank(),
       legend.key = ggplot2::element_blank()
