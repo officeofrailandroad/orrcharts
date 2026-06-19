@@ -82,7 +82,7 @@ donut_chart <- function(
       lineheight = 0.25
     ) +
     ggplot2::coord_polar(theta = "y", clip = "off") +
-    ggplot2::xlim(c(0, 6)) +
+    ggplot2::xlim(c(0, 7)) +
     ggplot2::theme_minimal() +
     ggplot2::scale_fill_manual(values = colours) +
     ggplot2::scale_colour_manual(values = colours) +
@@ -91,7 +91,7 @@ donut_chart <- function(
       axis.text = ggplot2::element_blank(),
       axis.ticks = ggplot2::element_blank(),
       axis.title = ggplot2::element_blank(),
-      margins = ggplot2::margin(0)
+      margins = ggplot2::margin_auto(0)
     ) +
     ggplot2::guides(
       fill = "none",
