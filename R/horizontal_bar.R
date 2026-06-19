@@ -115,6 +115,7 @@ horizontal_bar <- function(
     ggplot2::guides(colour = "none", fill = fill_legend) +
     ggplot2::theme(
       text = ggplot2::element_text(family = font_fam, size = (font_size * ggplot2::.pt)),
+      plot.margin = ggplot2::margin_auto(0),
       axis.text = ggplot2::element_text(
         size = ggplot2::rel(1),
         lineheight = 0.25

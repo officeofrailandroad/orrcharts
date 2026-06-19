@@ -132,15 +132,16 @@ quarterly_bar <- function(
       axis.text = ggplot2::element_text(size = ggplot2::rel(1)),
       axis.ticks.length.x = grid::unit(.5, "cm"), # set length of x axis ticks
       title = ggplot2::element_blank(), # remove whitespace at top of plot for title
-      plot.margin = ggplot2::margin(t = 5, r = 10 + extra_rightside_margin, b = 0, l = 0.5), # set margins around plot
+      plot.margin = ggplot2::margin(t = 5, r = 10 + extra_rightside_margin, b = 5, l = 0.5), # set margins around plot
       panel.grid.major.y = ggplot2::element_line(color = "grey90"), # set y axis lines to light grey
       # set styles for x axis labels
       axis.text.x  =  ggplot2::element_text(
         colour = "black",
         size = ggplot2::rel(1),
         hjust = -0.37 + h_nudge_x_axis_labels, # Default placement for 6 years
-        vjust = 6 # up down adjustment
-      )
+        vjust = 6 # up down adjustment,
+      ),
+      axis.title.x = ggplot2::element_blank()
     )
 
   # Save plot in standard size

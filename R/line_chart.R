@@ -257,6 +257,7 @@ line_chart <- function(
     ggplot2::guides(colour = "none", shape = "none") +
     ggplot2::theme(
       text = ggplot2::element_text(family = font_fam, size = (font_size * ggplot2::.pt), lineheight = 0.25),
+      plot.margin = ggplot2::margin(l = 5, t = 5),
       axis.text = ggplot2::element_text(size = ggplot2::rel(1)),
       panel.grid.major.y = ggplot2::element_line(color = "grey90"), # set y axis lines to light grey,
       # Set x axis tick lengths
