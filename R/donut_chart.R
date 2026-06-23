@@ -6,7 +6,8 @@
 #' @inheritParams bar_chart
 #' @param colours The colours for the donut sections. Defaults to ORR colours.
 #' @param labels_gap_size Gap between the outside of the donut and the centre of
-#'   the text labels.
+#'   the text labels.Labels are positions using ggrepel to avoid overlaps. This
+#'   parameter sets the starting distance before the repel algorithm is run.
 #' @param as_pie_chart If true will remove hole in donut and show as pie chart.
 #' @export
 donut_chart <- function(
@@ -67,10 +68,10 @@ donut_chart <- function(
       )
     ) +
     ggplot2::geom_rect(colour = "white", linewidth = 0.3) +
-    ggplot2::geom_text(
+    ggrepel::geom_text_repel(
       ggplot2::aes(
         y = (.data$ymax + .data$ymin) / 2,
-        x = donut_ring_width + labels_gap_size,
+        x = donut_ring_width,
         label = .data$label,
         colour = .data$category
       ),
@@ -79,7 +80,10 @@ donut_chart <- function(
       family = font_fam,
       fontface = "bold",
       size = font_size,
-      lineheight = 0.25
+      lineheight = 0.25,
+      nudge_x = labels_gap_size,
+      point.padding = 0.1,
+      min.segment.length = 0.25
     ) +
     ggplot2::coord_polar(theta = "y", clip = "off") +
     ggplot2::xlim(c(0, 7)) +
