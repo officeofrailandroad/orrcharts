@@ -9,6 +9,8 @@
 #'   the text labels.Labels are positions using ggrepel to avoid overlaps. This
 #'   parameter sets the starting distance before the repel algorithm is run.
 #' @param as_pie_chart If true will remove hole in donut and show as pie chart.
+#' @param min_label_segment_length Minimum length of line between the text label
+#'   and the edge of the segment. Hidden if smaller than this.
 #' @export
 donut_chart <- function(
     data,
@@ -19,6 +21,7 @@ donut_chart <- function(
     colours = orr_colours(),
     data_labeller = scales::label_number(scale = 1, accuracy = 1),
     labels_gap_size = 2,
+    min_label_segment_length = 0.4,
     as_pie_chart = FALSE
     ) {
   # Check input parameters
@@ -26,10 +29,15 @@ donut_chart <- function(
     data, filename, path, chart_width, chart_height, colours, data_labeller
   )
   assertthat::assert_that(
-    assertthat::is.scalar(labels_gap_size)
+    assertthat::is.scalar(labels_gap_size),
+    labels_gap_size >= 0
   )
   assertthat::assert_that(
     assertthat::is.flag(as_pie_chart)
+  )
+  assertthat::assert_that(
+    assertthat::is.scalar(min_label_segment_length),
+    min_label_segment_length >= 0
   )
 
   # Fix the size and names of the data
@@ -83,7 +91,7 @@ donut_chart <- function(
       lineheight = 0.25,
       nudge_x = labels_gap_size,
       point.padding = 0.1,
-      min.segment.length = 0.25
+      min.segment.length = min_label_segment_length
     ) +
     ggplot2::coord_polar(theta = "y", clip = "off") +
     ggplot2::xlim(c(0, 7)) +

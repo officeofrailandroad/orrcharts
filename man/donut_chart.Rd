@@ -13,6 +13,7 @@ donut_chart(
   colours = orr_colours(),
   data_labeller = scales::label_number(scale = 1, accuracy = 1),
   labels_gap_size = 2,
+  min_label_segment_length = 0.4,
   as_pie_chart = FALSE
 )
 }
@@ -37,6 +38,9 @@ bars are displayed.}
 \item{labels_gap_size}{Gap between the outside of the donut and the centre of
 the text labels.Labels are positions using ggrepel to avoid overlaps. This
 parameter sets the starting distance before the repel algorithm is run.}
+
+\item{min_label_segment_length}{Minimum length of line between the text label
+and the edge of the segment. Hidden if smaller than this.}
 
 \item{as_pie_chart}{If true will remove hole in donut and show as pie chart.}
 }
