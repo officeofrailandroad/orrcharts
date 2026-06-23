@@ -17,7 +17,7 @@ donut_chart <- function(
     chart_height = 3.567,
     colours = orr_colours(),
     data_labeller = scales::label_number(scale = 1, accuracy = 1),
-    labels_gap_size = 1,
+    labels_gap_size = 2,
     as_pie_chart = FALSE
     ) {
   # Check input parameters
@@ -52,7 +52,7 @@ donut_chart <- function(
   showtext::showtext_auto()
   font_size <- 13
 
-  donut_hole_size <- ifelse(as_pie_chart, 0, 2)
+  donut_hole_size <- ifelse(as_pie_chart, 0.01, 2)
   donut_ring_width <- 4
 
 
@@ -66,11 +66,11 @@ donut_chart <- function(
         xmin = donut_hole_size
       )
     ) +
-    ggplot2::geom_rect(colour = "white") +
+    ggplot2::geom_rect(colour = "white", linewidth = 0.3) +
     ggplot2::geom_text(
       ggplot2::aes(
         y = (.data$ymax + .data$ymin) / 2,
-        x = (donut_hole_size + donut_ring_width) + labels_gap_size,
+        x = donut_ring_width + labels_gap_size,
         label = .data$label,
         colour = .data$category
       ),
