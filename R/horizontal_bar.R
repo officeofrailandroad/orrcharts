@@ -6,6 +6,8 @@
 #' @inheritParams bar_chart
 #' @param legend_position Set location of the legend in the plot. Default is
 #'   bottom right. c(0,0) is bottom left.
+#' @param y_axis_label_wrap_nchar Number of characters before wrapping y axis
+#'   labels into new lines.
 #' @export
 horizontal_bar <- function(
     data,
@@ -18,7 +20,8 @@ horizontal_bar <- function(
     outside_bar_threshold = 0.1,
     outside_bar_distance = 0.05,
     show_legend = FALSE,
-    legend_position = c(0.8,0.2)
+    legend_position = c(0.8,0.2),
+    y_axis_label_wrap_nchar = 20
 
 ) {
   # Check input parameters
@@ -46,7 +49,7 @@ horizontal_bar <- function(
   plot_data <- fixed_data %>%
     tidyr::pivot_longer(- dplyr::all_of("name"), names_to = "col") %>%
     dplyr::mutate(
-      name_label = stringr::str_wrap(.data$name, 20),
+      name_label = stringr::str_wrap(.data$name, y_axis_label_wrap_nchar),
       # fix order of dodged bars to match order of columns in data supplied
       col = factor(col, levels = rev(col_labels)),
       value_label = data_labeller(.data$value),

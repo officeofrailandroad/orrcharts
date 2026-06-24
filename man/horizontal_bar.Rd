@@ -15,7 +15,8 @@ horizontal_bar(
   outside_bar_threshold = 0.1,
   outside_bar_distance = 0.05,
   show_legend = FALSE,
-  legend_position = c(0.8, 0.2)
+  legend_position = c(0.8, 0.2),
+  y_axis_label_wrap_nchar = 20
 )
 }
 \arguments{
@@ -48,6 +49,9 @@ shown. Increase to move further from the bar.}
 
 \item{legend_position}{Set location of the legend in the plot. Default is
 bottom right. c(0,0) is bottom left.}
+
+\item{y_axis_label_wrap_nchar}{Number of characters before wrapping y axis
+labels into new lines.}
 }
 \description{
 A simple horizontal bar chart to display a single set of values
