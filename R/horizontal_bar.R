@@ -49,7 +49,8 @@ horizontal_bar <- function(
   plot_data <- fixed_data %>%
     tidyr::pivot_longer(- dplyr::all_of("name"), names_to = "col") %>%
     dplyr::mutate(
-      name_label = stringr::str_wrap(.data$name, y_axis_label_wrap_nchar),
+      # name_label = stringr::str_wrap(.data$name, y_axis_label_wrap_nchar),
+      name_label = .data$name,
       # fix order of dodged bars to match order of columns in data supplied
       col = factor(col, levels = rev(col_labels)),
       value_label = data_labeller(.data$value),
@@ -75,6 +76,10 @@ horizontal_bar <- function(
   font_size <- 13
 
   names(bar_colours) <- NULL
+
+  y_label_formatter <- function(x) {
+    stringr::str_wrap(x, width = y_axis_label_wrap_nchar)
+  }
 
   bplt <- plot_data %>%
     ggplot2::ggplot(
@@ -109,7 +114,10 @@ horizontal_bar <- function(
       name = NULL,
       expand = c(0, 0)
     ) +
-    ggplot2::scale_x_discrete(name = NULL) +
+    ggplot2::scale_x_discrete(
+      name = NULL,
+      labels = y_label_formatter
+    ) +
     ggplot2::scale_fill_manual(
       name = NULL,
       values = bar_colours,
