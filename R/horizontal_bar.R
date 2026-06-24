@@ -89,7 +89,8 @@ horizontal_bar <- function(
         y = .data$value
       ),
       position = "dodge",
-      colour = "white" # white space between dodged bars
+      colour = "white", # white space between dodged bars
+      width = 0.99
     ) +
     ggplot2::geom_text(
       ggplot2::aes(
