@@ -12,12 +12,14 @@ side_by_side_bar(
   chart_height = 7.3,
   left_bar_title = "METRIC, TIME PERIOD",
   right_bar_title = "Change from TIME PERIOD",
-  right_bar_order_descending = TRUE,
+  order_by_bar = c("right", "left"),
+  order_descending = TRUE,
   left_bar_colour = "#253268",
-  right_bar_colour_positive = ifelse(right_bar_order_descending, "#28994b", "#B1173B"),
-  right_bar_colour_negative = ifelse(right_bar_order_descending, "#B1173B", "#28994b"),
+  right_bar_colour_positive = ifelse(order_descending, "#28994b", "#B1173B"),
+  right_bar_colour_negative = ifelse(order_descending, "#B1173B", "#28994b"),
   left_bar_labeller = label_orr_comma(),
-  right_bar_labeller = label_orr_percent()
+  right_bar_labeller = label_orr_percent(),
+  right_bar_order_descending = order_descending
 )
 }
 \arguments{
@@ -35,9 +37,9 @@ working directory.}
 \item{left_bar_title, right_bar_title}{The text which appears above each set
 of bars.}
 
-\item{right_bar_order_descending}{\code{TRUE} or \code{FALSE}. If \code{TRUE} both bar
-charts are arranged in descending order of the right-hand bar chart. If
-\code{FALSE} then ascending and default bar colours flip.}
+\item{order_by_bar}{Order by the left or right set of bars.}
+
+\item{order_descending}{Sort bars descending or ascending.}
 
 \item{left_bar_colour}{A string hexcode for the colour of the bars in the
 left-hand side bar chart. Default is for ORR dark blue.}
@@ -50,6 +52,11 @@ for green/red but could also use ORR yellow for both.}
 \item{left_bar_labeller, right_bar_labeller}{Functions, for example result of
 a labeller function, which turn data numeric values into character labels.
 See \link[scales]{label_percent}}
+
+\item{right_bar_order_descending}{This parameter is deprecated to allow
+sorting by left or right bar. \code{TRUE} or \code{FALSE}. If \code{TRUE} both bar charts
+are arranged in descending order of the right-hand bar chart. If \code{FALSE}
+then ascending and default bar colours flip.}
 }
 \description{
 Side-by-side bar chart to compare changes over time in a metric between TOCs.

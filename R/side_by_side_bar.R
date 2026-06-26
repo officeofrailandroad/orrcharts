@@ -14,9 +14,12 @@
 #'   for the colours of the right-hand side bar chart. `_positive` colours
 #'   positive valued bars and `_negative` colours those below zero. Default is
 #'   for green/red but could also use ORR yellow for both.
-#' @param right_bar_order_descending `TRUE` or `FALSE`. If `TRUE` both bar
-#'   charts are arranged in descending order of the right-hand bar chart. If
-#'   `FALSE` then ascending and default bar colours flip.
+#' @param right_bar_order_descending This parameter is deprecated to allow
+#'   sorting by left or right bar. `TRUE` or `FALSE`. If `TRUE` both bar charts
+#'   are arranged in descending order of the right-hand bar chart. If `FALSE`
+#'   then ascending and default bar colours flip.
+#' @param order_by_bar Order by the left or right set of bars.
+#' @param order_descending Sort bars descending or ascending.
 #' @param left_bar_labeller,right_bar_labeller Functions, for example result of
 #'   a labeller function, which turn data numeric values into character labels.
 #'   See \link[scales]{label_percent}
@@ -29,12 +32,14 @@ side_by_side_bar <- function(
     chart_height = 7.3,
     left_bar_title = "METRIC, TIME PERIOD",
     right_bar_title = "Change from TIME PERIOD",
-    right_bar_order_descending = TRUE,
+    order_by_bar = c("right","left"),
+    order_descending = TRUE,
     left_bar_colour = "#253268",
-    right_bar_colour_positive = ifelse(right_bar_order_descending, "#28994b", "#B1173B"),
-    right_bar_colour_negative = ifelse(right_bar_order_descending, "#B1173B", "#28994b"),
+    right_bar_colour_positive = ifelse(order_descending, "#28994b", "#B1173B"),
+    right_bar_colour_negative = ifelse(order_descending, "#B1173B", "#28994b"),
     left_bar_labeller = label_orr_comma(),
-    right_bar_labeller = label_orr_percent()
+    right_bar_labeller = label_orr_percent(),
+    right_bar_order_descending = order_descending # deprecated
 ) {
   assert_chart_params(
     data, filename, path, chart_width, chart_height
@@ -45,8 +50,13 @@ side_by_side_bar <- function(
     msg = "left_bar_title and right_bar_title need to be strings of length 1."
   )
   assertthat::assert_that(
+    assertthat::is.flag(order_descending),
     assertthat::is.flag(right_bar_order_descending),
-    msg = "right_bar_order_descending expects TRUE or FALSE"
+    msg = "order_descending expects TRUE or FALSE"
+  )
+  assertthat::assert_that(
+    assertthat::is.string(order_by_bar[1]),
+    order_by_bar[1] %in% c("left","right")
   )
   assertthat::assert_that(
     rlang::is_closure(left_bar_labeller),
@@ -62,14 +72,17 @@ side_by_side_bar <- function(
 
   data <- data[, 1:3]
   colnames(data) <- c("toc", "value", "change")
+  order_col <- order_by_bar[1]
+  order_descending <- right_bar_order_descending
 
   plot_data <- data %>%
     # sort the values by the change column. Either descending or ascending based
     # on argument
     {
-      if(right_bar_order_descending)
-        dplyr::arrange(., dplyr::desc(.data$change))
-      else dplyr::arrange(., .data$change)
+      if(order_col == "right" & order_descending) dplyr::arrange(., dplyr::desc(.data$change))
+      else if(order_col == "right" & ! order_descending) dplyr::arrange(., .data$change)
+      else if(order_col == "left" & order_descending) dplyr::arrange(., dplyr::desc(.data$value))
+      else dplyr::arrange(., .data$value)
       } %>%
     # create a variable to sort the bars later
     dplyr::mutate(bar_order = dplyr::row_number()) %>%
