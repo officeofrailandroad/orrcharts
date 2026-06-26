@@ -51,7 +51,8 @@ side_by_side_bar <- function(
   )
   assertthat::assert_that(
     assertthat::is.flag(order_descending),
-    msg = "right_bar_order_descending expects TRUE or FALSE"
+    assertthat::is.flag(right_bar_order_descending),
+    msg = "order_descending expects TRUE or FALSE"
   )
   assertthat::assert_that(
     assertthat::is.string(order_by_bar[1]),
