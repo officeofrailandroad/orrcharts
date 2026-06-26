@@ -228,7 +228,7 @@ donut_chart(
   filename = "demo_donut_chart.png",
   path = image_dir,
   data_labeller = scales::label_percent(scale = 1),
-  labels_gap_size = 0.5
+  labels_gap_size = 1.5
 )
 
 ```
