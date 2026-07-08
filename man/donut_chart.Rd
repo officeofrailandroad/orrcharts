@@ -14,6 +14,7 @@ donut_chart(
   data_labeller = scales::label_number(scale = 1, accuracy = 1),
   labels_gap_size = 2,
   min_label_segment_length = 0.4,
+  outer_chart_limit = 7,
   as_pie_chart = FALSE
 )
 }
