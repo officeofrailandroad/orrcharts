@@ -11,6 +11,8 @@
 #' @param as_pie_chart If true will remove hole in donut and show as pie chart.
 #' @param min_label_segment_length Minimum length of line between the text label
 #'   and the edge of the segment. Hidden if smaller than this.
+#' @param outer_chart_limit The upper limit on x-axis which sets that outer size
+#'   of the chart.
 #' @export
 donut_chart <- function(
     data,
@@ -22,6 +24,7 @@ donut_chart <- function(
     data_labeller = scales::label_number(scale = 1, accuracy = 1),
     labels_gap_size = 2,
     min_label_segment_length = 0.4,
+    outer_chart_limit = 7,
     as_pie_chart = FALSE
     ) {
   # Check input parameters
@@ -38,6 +41,10 @@ donut_chart <- function(
   assertthat::assert_that(
     assertthat::is.scalar(min_label_segment_length),
     min_label_segment_length >= 0
+  )
+  assertthat::assert_that(
+    assertthat::is.scalar(outer_chart_limit),
+    outer_chart_limit >= 0
   )
 
   # Fix the size and names of the data
@@ -94,7 +101,7 @@ donut_chart <- function(
       min.segment.length = min_label_segment_length
     ) +
     ggplot2::coord_polar(theta = "y", clip = "off") +
-    ggplot2::xlim(c(0, 7)) +
+    ggplot2::xlim(c(0, outer_chart_limit)) +
     ggplot2::theme_minimal() +
     ggplot2::scale_fill_manual(values = colours) +
     ggplot2::scale_colour_manual(values = colours) +
