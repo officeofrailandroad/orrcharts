@@ -54,13 +54,16 @@ donut_chart <- function(
   # Remove names from list of colours - it interferes with ggplot
   base::names(colours) <- NULL
 
+  cat_levels_order <- unique(fixed_data$category)
+
   plot_data <- fixed_data %>%
     dplyr::mutate(
       frac = .data$value / sum(.data$value),
       ymax = cumsum(.data$frac),
       ymin = c(0, utils::head(.data$ymax, n = -1)),
       frac_label = data_labeller(.data$value),
-      label = paste(stringr::str_wrap(.data$category, 12), .data$frac_label, sep = "\n")
+      label = paste(stringr::str_wrap(.data$category, 12), .data$frac_label, sep = "\n"),
+      category = factor(.data$category, levels = cat_levels_order)
     )
 
   # Set font family and size

@@ -43,6 +43,9 @@ parameter sets the starting distance before the repel algorithm is run.}
 \item{min_label_segment_length}{Minimum length of line between the text label
 and the edge of the segment. Hidden if smaller than this.}
 
+\item{outer_chart_limit}{The upper limit on x-axis which sets that outer size
+of the chart.}
+
 \item{as_pie_chart}{If true will remove hole in donut and show as pie chart.}
 }
 \description{
