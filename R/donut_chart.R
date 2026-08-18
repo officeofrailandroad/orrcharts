@@ -72,9 +72,9 @@ donut_chart <- function(
     )
 
   # Set font family and size
-  font_fam <- "Arial"
+  font_fam <- .text_font_family
   showtext::showtext_auto()
-  font_size <- 13
+  font_size <- .text_font_size
 
   donut_hole_size <- ifelse(as_pie_chart, 0.01, 2)
   donut_ring_width <- 4
@@ -115,7 +115,7 @@ donut_chart <- function(
       size = font_size,
       family = font_fam,
       fontface = "bold",
-      lineheight = 0.25,
+      lineheight = .text_line_height,
       label = centre_label
     ) +
     ggplot2::coord_polar(theta = "y", clip = "off") +
@@ -141,9 +141,9 @@ donut_chart <- function(
     path = path,
     width = chart_width,
     height = chart_height,
-    units = "in",
+    units = .plot_device_units,
     device = "png",
-    dpi = 300
+    dpi = .plot_png_dpi
   )
 
 }

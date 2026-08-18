@@ -99,9 +99,9 @@ line_chart <- function(
   }
 
   # Set font family and size
-  font_fam <- "Arial"
+  font_fam <- .text_font_family
   showtext::showtext_auto()
-  font_size <- 13
+  font_size <- .text_font_size
 
   # Remove names from colours
   base::names(series_colours) <- NULL
@@ -172,7 +172,7 @@ line_chart <- function(
     # Increased the default allowed overlaps for when lines are really close together.
     max.overlaps = 20,
     # Set line height for wrapped labels
-    lineheight = 0.25,
+    lineheight = .text_line_height,
     seed = chart_seed
   )
 
@@ -202,7 +202,7 @@ line_chart <- function(
       # Set label anchor point to centre of label
       hjust = "center",
       vjust = "middle",
-      lineheight = 0.25
+      lineheight = .text_line_height
     )
   }
 
@@ -291,10 +291,10 @@ line_chart <- function(
     # Don't show legends
     ggplot2::guides(colour = "none", shape = "none") +
     ggplot2::theme(
-      text = ggplot2::element_text(family = font_fam, size = (font_size * ggplot2::.pt), lineheight = 0.25),
+      text = ggplot2::element_text(family = font_fam, size = (font_size * ggplot2::.pt), lineheight = .text_line_height),
       plot.margin = ggplot2::margin(l = 5, t = 5),
       axis.text = ggplot2::element_text(size = ggplot2::rel(1)),
-      panel.grid.major.y = ggplot2::element_line(color = "grey90"), # set y axis lines to light grey,
+      panel.grid.major.y = ggplot2::element_line(color = .plot_grid_major_colour), # set y axis lines to light grey,
       # Set x axis tick lengths
       axis.ticks.length.x = grid::unit(.3, "cm"),
       axis.minor.ticks.x.bottom = ggplot2::element_line(),
@@ -307,8 +307,8 @@ line_chart <- function(
     path = path,
     width = chart_width,
     height = chart_height,
-    units = "in",
+    units = .plot_device_units,
     device = "png",
-    dpi = 300
+    dpi = .plot_png_dpi
   )
 }

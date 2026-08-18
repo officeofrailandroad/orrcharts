@@ -71,9 +71,9 @@ horizontal_bar <- function(
   if(show_legend) fill_legend <- "legend"
 
   # Set font family and size
-  font_fam <- "Arial"
+  font_fam <- .text_font_family
   showtext::showtext_auto()
-  font_size <- 13
+  font_size <- .text_font_size
 
   names(bar_colours) <- NULL
 
@@ -130,7 +130,7 @@ horizontal_bar <- function(
       plot.margin = ggplot2::margin_auto(0),
       axis.text = ggplot2::element_text(
         size = ggplot2::rel(1),
-        lineheight = 0.25
+        lineheight = .text_line_height
       ),
       axis.text.y = ggplot2::element_text(margin = ggplot2::margin(t = 0, r = 5, b = 0, l = 0)),
       axis.text.x = ggplot2::element_blank(),
@@ -139,7 +139,7 @@ horizontal_bar <- function(
       legend.position = "inside",
       legend.direction = "vertical", # Layout legend categories vertical
       legend.position.inside = legend_position,
-      legend.text = ggplot2::element_text(lineheight = 0.25, size = ggplot2::rel(1)),
+      legend.text = ggplot2::element_text(lineheight = .text_line_height, size = ggplot2::rel(1)),
       legend.title = ggplot2::element_blank(), # No legend title
       # Remove legend background
       legend.background = ggplot2::element_blank(),
@@ -152,9 +152,9 @@ horizontal_bar <- function(
     path = path,
     width = chart_width,
     height = chart_height,
-    units = "in",
+    units = .plot_device_units,
     device = "png",
-    dpi = 300
+    dpi = .plot_png_dpi
   )
 }
 
