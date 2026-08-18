@@ -19,6 +19,7 @@ line_chart(
   series_label_coordinates = NULL,
   data_labeller = label_orr_comma(),
   nudge_y_data_label = 0,
+  series_breaks = NULL,
   chart_seed = 101
 )
 }
@@ -65,6 +66,8 @@ displayed.}
 
 \item{nudge_y_data_label}{Manually shift data labels up or down for fine
 tweaks. Value is based on y-axis values.}
+
+\item{series_breaks}{Array of x-axis values with series breaks.}
 
 \item{chart_seed}{Set random seed for \code{\link[ggrepel:geom_text_repel]{ggrepel::geom_text_repel()}}. \code{ggrepel}
 uses random numbers in the positioning algorithm. By setting a seed for the

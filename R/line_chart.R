@@ -27,6 +27,7 @@
 #'   default, locations are guessed using ggrepel.
 #' @param nudge_y_data_label Manually shift data labels up or down for fine
 #'   tweaks. Value is based on y-axis values.
+#' @param series_breaks Array of x-axis values with series breaks.
 #' @param chart_seed Set random seed for [ggrepel::geom_text_repel()]. `ggrepel`
 #'   uses random numbers in the positioning algorithm. By setting a seed for the
 #'   random number generator the labels will be in the same place each time the
@@ -52,6 +53,7 @@ line_chart <- function(
     series_label_coordinates = NULL,
     data_labeller = label_orr_comma(),
     nudge_y_data_label = 0,
+    series_breaks = NULL,
     chart_seed = 101
 ) {
   assert_chart_params(
@@ -77,6 +79,16 @@ line_chart <- function(
   if (length(x_axis_labels) > 0) {
     x_breaks <- which(x_dates %in% x_axis_labels) # locations of desired x axis labels
     x_labels <- x_axis_labels
+  }
+
+  # Check series breaks
+  valid_breaks <- double(0)
+  if(length(series_breaks) > 0) {
+    valid_breaks <- series_breaks[series_breaks %in% x_dates]
+    invalid_breaks <- series_breaks[! series_breaks %in% x_dates]
+    if(length(invalid_breaks) > 0) {
+      warning(paste0("Series breaks do not match values in first column: ", paste(invalid_breaks, collapse = ", ")))
+    }
   }
 
   # Set y-axis limits
@@ -118,6 +130,24 @@ line_chart <- function(
         ""
       )
     )
+
+  # Create breaks groups
+  plot_data <- plot_data %>%
+    dplyr::group_by(.data$name) %>%
+    dplyr::arrange(.data$x_id) %>%
+    dplyr::mutate(
+      # Create unique IDs for points before and after each breaks within series
+      breaks_group = paste0(.data$name, "_", cumsum(.data$date %in% valid_breaks))
+    ) %>%
+    dplyr::ungroup()
+
+  # Get the x_id values of the series break points
+  # This is used to plot the vertical dashed lines
+  valid_breaks_x_ids <- plot_data %>%
+    dplyr::filter(.data$date %in% valid_breaks) %>%
+    dplyr::pull(.data$x_id) %>%
+    unique()
+
 
   # Create series labels geom_text
   # Use ggrepel unless coordinates are specified
@@ -191,8 +221,13 @@ line_chart <- function(
       group = .data$name
     )
   ) +
-    ggplot2::geom_line() +
+    ggplot2::geom_line(ggplot2::aes(group = .data$breaks_group)) +
     ggplot2::geom_point(ggplot2::aes(shape = .data$name)) +
+    ggplot2::geom_vline(
+      # add dashed lines on series breaks
+      xintercept = valid_breaks_x_ids,
+      linetype = "dashed"
+    ) +
     # Series labels
     # Use ggrepel to try to prevent them overlapping the lines and each other
     # ggrepel::geom_text_repel(
