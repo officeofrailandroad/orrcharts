@@ -112,9 +112,9 @@ side_by_side_bar <- function(
     dplyr::ungroup()
 
   # Set font family and size
-  font_fam <- "Arial"
+  font_fam <- .text_font_family
   showtext::showtext_auto()
-  font_size <- 13
+  font_size <- .text_font_size
 
   # Set the titles for each chart
   left_title_char_width <- 25
@@ -147,9 +147,24 @@ side_by_side_bar <- function(
       family = font_fam,
       size = font_size,
       hjust = "right") +
-    ggplot2::geom_hline(yintercept = 0, colour = "black", linewidth = 0.2) + # vertical axis lines
-    ggplot2::geom_vline(xintercept = 0.4, colour = "black", linewidth = 0.2) + # bottom horizontal line
-    ggplot2::geom_vline(xintercept = n_tocs + 0.6, colour = "black", linewidth = 0.2) + # top horizontal line
+    ggplot2::geom_hline(
+      # vertical axis lines
+      yintercept = 0,
+      colour = .plot_axis_line_colour,
+      linewidth = .plot_axis_line_width
+    ) +
+    ggplot2::geom_vline(
+      # bottom horizontal line
+      xintercept = 0.4,
+      colour = .plot_axis_line_colour,
+      linewidth = .plot_axis_line_width
+    ) +
+    ggplot2::geom_vline(
+      # top horizontal line
+      xintercept = n_tocs + 0.6,
+      colour = .plot_axis_line_colour,
+      linewidth = .plot_axis_line_width
+    ) +
     ggplot2::facet_wrap(
       col ~ .,
       scales = "free_x",
@@ -174,7 +189,7 @@ side_by_side_bar <- function(
         vjust = 0,
         face = "bold",
         size = ggplot2::rel(1),
-        lineheight = 0.3,
+        lineheight = .text_line_height,
         margin = ggplot2::margin(t = 0, l = 5, b = 5, r = 0) # nudge text to line up with data labels
         ),
       panel.spacing.x = ggplot2::unit(0, "lines"), # remove padding between charts so horizontal lines go full width
@@ -188,8 +203,8 @@ side_by_side_bar <- function(
     plot = plt,
     width = chart_width,
     height = chart_height,
-    units = "in",
+    units = .plot_device_units,
     device = "png",
-    dpi = 300
+    dpi = .plot_png_dpi
   )
 }

@@ -92,9 +92,9 @@ quarterly_bar <- function(
   max_q <- plot_years * 4
 
   # Set font family and size
-  font_fam <- "Arial"
+  font_fam <- .text_font_family
   showtext::showtext_auto()
-  font_size <- 13
+  font_size <- .text_font_size
 
   qbar_plot <- plot_data %>%
     ggplot2::ggplot() +
@@ -133,7 +133,7 @@ quarterly_bar <- function(
       axis.ticks.length.x = grid::unit(.5, "cm"), # set length of x axis ticks
       title = ggplot2::element_blank(), # remove whitespace at top of plot for title
       plot.margin = ggplot2::margin(t = 5, r = 10 + extra_rightside_margin, b = 5, l = 0.5), # set margins around plot
-      panel.grid.major.y = ggplot2::element_line(color = "grey90"), # set y axis lines to light grey
+      panel.grid.major.y = ggplot2::element_line(color = .plot_grid_major_colour), # set y axis lines to light grey
       # set styles for x axis labels
       axis.text.x  =  ggplot2::element_text(
         colour = "black",
@@ -151,8 +151,8 @@ quarterly_bar <- function(
     plot = qbar_plot,
     width = chart_width,
     height = chart_height,
-    units = "in",
+    units = .plot_device_units,
     device = "png",
-    dpi = 300
+    dpi = .plot_png_dpi
   )
 }

@@ -13,6 +13,7 @@
 #'   and the edge of the segment. Hidden if smaller than this.
 #' @param outer_chart_limit The upper limit on x-axis which sets that outer size
 #'   of the chart.
+#' @param centre_label Text displayed at the centre of the chart
 #' @export
 donut_chart <- function(
     data,
@@ -25,7 +26,8 @@ donut_chart <- function(
     labels_gap_size = 2,
     min_label_segment_length = 0.4,
     outer_chart_limit = 7,
-    as_pie_chart = FALSE
+    as_pie_chart = FALSE,
+    centre_label = ""
     ) {
   # Check input parameters
   assert_chart_params(
@@ -45,6 +47,9 @@ donut_chart <- function(
   assertthat::assert_that(
     assertthat::is.scalar(outer_chart_limit),
     outer_chart_limit >= 0
+  )
+  assertthat::assert_that(
+    assertthat::is.string(centre_label)
   )
 
   # Fix the size and names of the data
@@ -67,9 +72,9 @@ donut_chart <- function(
     )
 
   # Set font family and size
-  font_fam <- "Arial"
+  font_fam <- .text_font_family
   showtext::showtext_auto()
-  font_size <- 13
+  font_size <- .text_font_size
 
   donut_hole_size <- ifelse(as_pie_chart, 0.01, 2)
   donut_ring_width <- 4
@@ -103,6 +108,16 @@ donut_chart <- function(
       point.padding = 0.1,
       min.segment.length = min_label_segment_length
     ) +
+    ggplot2::annotate(
+      "text",
+      x = 0, y = 0,
+      hjust = "center", vjust = "middle",
+      size = font_size,
+      family = font_fam,
+      fontface = "bold",
+      lineheight = .text_line_height,
+      label = centre_label
+    ) +
     ggplot2::coord_polar(theta = "y", clip = "off") +
     ggplot2::xlim(c(0, outer_chart_limit)) +
     ggplot2::theme_minimal() +
@@ -126,9 +141,9 @@ donut_chart <- function(
     path = path,
     width = chart_width,
     height = chart_height,
-    units = "in",
+    units = .plot_device_units,
     device = "png",
-    dpi = 300
+    dpi = .plot_png_dpi
   )
 
 }

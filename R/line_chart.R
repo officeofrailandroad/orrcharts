@@ -27,6 +27,7 @@
 #'   default, locations are guessed using ggrepel.
 #' @param nudge_y_data_label Manually shift data labels up or down for fine
 #'   tweaks. Value is based on y-axis values.
+#' @param series_breaks Array of x-axis values with series breaks.
 #' @param chart_seed Set random seed for [ggrepel::geom_text_repel()]. `ggrepel`
 #'   uses random numbers in the positioning algorithm. By setting a seed for the
 #'   random number generator the labels will be in the same place each time the
@@ -52,6 +53,7 @@ line_chart <- function(
     series_label_coordinates = NULL,
     data_labeller = label_orr_comma(),
     nudge_y_data_label = 0,
+    series_breaks = NULL,
     chart_seed = 101
 ) {
   assert_chart_params(
@@ -79,6 +81,16 @@ line_chart <- function(
     x_labels <- x_axis_labels
   }
 
+  # Check series breaks
+  valid_breaks <- double(0)
+  if(length(series_breaks) > 0) {
+    valid_breaks <- series_breaks[series_breaks %in% x_dates]
+    invalid_breaks <- series_breaks[! series_breaks %in% x_dates]
+    if(length(invalid_breaks) > 0) {
+      warning(paste0("Series breaks do not match values in first column: ", paste(invalid_breaks, collapse = ", ")))
+    }
+  }
+
   # Set y-axis limits
   y_limits <- NULL
   if(! methods::is(y_axis_breaks, "waiver")) {
@@ -87,9 +99,9 @@ line_chart <- function(
   }
 
   # Set font family and size
-  font_fam <- "Arial"
+  font_fam <- .text_font_family
   showtext::showtext_auto()
-  font_size <- 13
+  font_size <- .text_font_size
 
   # Remove names from colours
   base::names(series_colours) <- NULL
@@ -119,6 +131,24 @@ line_chart <- function(
       )
     )
 
+  # Create breaks groups
+  plot_data <- plot_data %>%
+    dplyr::group_by(.data$name) %>%
+    dplyr::arrange(.data$x_id) %>%
+    dplyr::mutate(
+      # Create unique IDs for points before and after each breaks within series
+      breaks_group = paste0(.data$name, "_", cumsum(.data$date %in% valid_breaks))
+    ) %>%
+    dplyr::ungroup()
+
+  # Get the x_id values of the series break points
+  # This is used to plot the vertical dashed lines
+  valid_breaks_x_ids <- plot_data %>%
+    dplyr::filter(.data$date %in% valid_breaks) %>%
+    dplyr::pull(.data$x_id) %>%
+    unique()
+
+
   # Create series labels geom_text
   # Use ggrepel unless coordinates are specified
   # Otherwise use supplied coordinates
@@ -142,7 +172,7 @@ line_chart <- function(
     # Increased the default allowed overlaps for when lines are really close together.
     max.overlaps = 20,
     # Set line height for wrapped labels
-    lineheight = 0.25,
+    lineheight = .text_line_height,
     seed = chart_seed
   )
 
@@ -172,7 +202,7 @@ line_chart <- function(
       # Set label anchor point to centre of label
       hjust = "center",
       vjust = "middle",
-      lineheight = 0.25
+      lineheight = .text_line_height
     )
   }
 
@@ -191,8 +221,13 @@ line_chart <- function(
       group = .data$name
     )
   ) +
-    ggplot2::geom_line() +
+    ggplot2::geom_line(ggplot2::aes(group = .data$breaks_group)) +
     ggplot2::geom_point(ggplot2::aes(shape = .data$name)) +
+    ggplot2::geom_vline(
+      # add dashed lines on series breaks
+      xintercept = valid_breaks_x_ids,
+      linetype = "dashed"
+    ) +
     # Series labels
     # Use ggrepel to try to prevent them overlapping the lines and each other
     # ggrepel::geom_text_repel(
@@ -256,10 +291,10 @@ line_chart <- function(
     # Don't show legends
     ggplot2::guides(colour = "none", shape = "none") +
     ggplot2::theme(
-      text = ggplot2::element_text(family = font_fam, size = (font_size * ggplot2::.pt), lineheight = 0.25),
+      text = ggplot2::element_text(family = font_fam, size = (font_size * ggplot2::.pt), lineheight = .text_line_height),
       plot.margin = ggplot2::margin(l = 5, t = 5),
       axis.text = ggplot2::element_text(size = ggplot2::rel(1)),
-      panel.grid.major.y = ggplot2::element_line(color = "grey90"), # set y axis lines to light grey,
+      panel.grid.major.y = ggplot2::element_line(color = .plot_grid_major_colour), # set y axis lines to light grey,
       # Set x axis tick lengths
       axis.ticks.length.x = grid::unit(.3, "cm"),
       axis.minor.ticks.x.bottom = ggplot2::element_line(),
@@ -272,8 +307,8 @@ line_chart <- function(
     path = path,
     width = chart_width,
     height = chart_height,
-    units = "in",
+    units = .plot_device_units,
     device = "png",
-    dpi = 300
+    dpi = .plot_png_dpi
   )
 }

@@ -93,9 +93,9 @@ bar_chart <- function(
   }
 
   # Set font family and size
-  font_fam <- "Arial"
+  font_fam <- .text_font_family
   showtext::showtext_auto()
-  font_size <- 13
+  font_size <- .text_font_size
 
   plot_data <- data %>%
     tidyr::pivot_longer(- dplyr::all_of("category")) %>%
@@ -184,12 +184,12 @@ bar_chart <- function(
       plot.margin = ggplot2::margin_auto(0),
       text = ggplot2::element_text(family = font_fam, size = (font_size * ggplot2::.pt)),
       axis.text = ggplot2::element_text(size = ggplot2::rel(1)),
-      panel.grid.major.y = ggplot2::element_line(color = "grey90"),
+      panel.grid.major.y = ggplot2::element_line(color = .plot_grid_major_colour),
       axis.ticks.x = ggplot2::element_blank(), # No x-axis ticks
       legend.direction = "horizontal", # Layout legend categories horizontally
       legend.position = "top",
       # legend.position.inside = c(0.5,0.95), # Legend centered and near top
-      legend.text = ggplot2::element_text(lineheight = 0.25, size = ggplot2::rel(1)),
+      legend.text = ggplot2::element_text(lineheight = .text_line_height, size = ggplot2::rel(1)),
       legend.title = ggplot2::element_blank(), # No legend title
       legend.margin = ggplot2::margin_auto(0),
       legend.box.spacing = ggplot2::rel(0),
@@ -206,8 +206,8 @@ bar_chart <- function(
     path = path,
     width = chart_width,
     height = chart_height,
-    units = "in",
+    units = .plot_device_units,
     device = "png",
-    dpi = 300
+    dpi = .plot_png_dpi
   )
 }

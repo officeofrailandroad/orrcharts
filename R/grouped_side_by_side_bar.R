@@ -138,9 +138,9 @@ grouped_side_by_side_bar <- function(
       )
 
   # Set font family and size
-  font_fam <- "Arial"
+  font_fam <- .text_font_family
   showtext::showtext_auto()
-  font_size <- 13
+  font_size <- .text_font_size
 
   # Set titles above bar columns
   title_char_width <- 25
@@ -154,7 +154,11 @@ grouped_side_by_side_bar <- function(
   gsbs_plot <- piv_plot_data %>%
     ggplot2::ggplot(
       ggplot2::aes(x = stats::reorder(.data$type, -.data$plot_order))) +
-    ggplot2::geom_hline(yintercept = 0, colour = "grey70") +
+    ggplot2::geom_hline(
+      yintercept = 0,
+      colour = .plot_axis_line_colour,
+      linewidth = .plot_axis_line_width
+    ) +
     ggplot2::geom_col(ggplot2::aes(y = .data$value, fill = .data$name), na.rm = TRUE) +
     ggplot2::geom_text(
       ggplot2::aes(
@@ -216,7 +220,7 @@ grouped_side_by_side_bar <- function(
         vjust = 0,
         face = "bold",
         size = ggplot2::rel(1),
-        lineheight = 0.3,
+        lineheight = .text_line_height,
         margin = ggplot2::margin(t = 0, l = 7, b = 5, r = 0)
       ),
       margins = ggplot2::margin_part(r = rightside_margin)
@@ -233,9 +237,9 @@ grouped_side_by_side_bar <- function(
     plot = gsbs_plot,
     width = chart_width,
     height = chart_height,
-    units = "in",
+    units = .plot_device_units,
     device = "png",
-    dpi = 300
+    dpi = .plot_png_dpi
   )
 }
 

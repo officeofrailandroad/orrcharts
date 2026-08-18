@@ -15,7 +15,8 @@ donut_chart(
   labels_gap_size = 2,
   min_label_segment_length = 0.4,
   outer_chart_limit = 7,
-  as_pie_chart = FALSE
+  as_pie_chart = FALSE,
+  centre_label = ""
 )
 }
 \arguments{
@@ -47,6 +48,8 @@ and the edge of the segment. Hidden if smaller than this.}
 of the chart.}
 
 \item{as_pie_chart}{If true will remove hole in donut and show as pie chart.}
+
+\item{centre_label}{Text displayed at the centre of the chart}
 }
 \description{
 A simple donut chart.
