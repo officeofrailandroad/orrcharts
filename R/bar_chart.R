@@ -183,7 +183,10 @@ bar_chart <- function(
     ggplot2::theme(
       plot.margin = ggplot2::margin_auto(0),
       text = ggplot2::element_text(family = font_fam, size = (font_size * ggplot2::.pt)),
-      axis.text = ggplot2::element_text(size = ggplot2::rel(1)),
+      axis.text = ggplot2::element_text(
+        size = ggplot2::rel(1),
+        colour = .plot_axis_text_colour
+      ),
       panel.grid.major.y = ggplot2::element_line(color = .plot_grid_major_colour),
       axis.ticks.x = ggplot2::element_blank(), # No x-axis ticks
       legend.direction = "horizontal", # Layout legend categories horizontally

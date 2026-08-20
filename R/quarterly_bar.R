@@ -128,8 +128,14 @@ quarterly_bar <- function(
       name = NULL # remove axis title
     ) +
     ggplot2::theme(
-      text = ggplot2::element_text(family = font_fam, size = (font_size * ggplot2::.pt)),
-      axis.text = ggplot2::element_text(size = ggplot2::rel(1)),
+      text = ggplot2::element_text(
+        family = font_fam,
+        size = (font_size * ggplot2::.pt)
+      ),
+      axis.text = ggplot2::element_text(
+        size = ggplot2::rel(1),
+        colour = .plot_axis_text_colour
+      ),
       axis.ticks.length.x = grid::unit(.5, "cm"), # set length of x axis ticks
       title = ggplot2::element_blank(), # remove whitespace at top of plot for title
       plot.margin = ggplot2::margin(t = 5, r = 10 + extra_rightside_margin, b = 5, l = 0.5), # set margins around plot

@@ -178,7 +178,7 @@ side_by_side_bar <- function(
     ggplot2::theme_classic(base_family = font_fam) +
     ggplot2::theme(
       text = ggplot2::element_text(family = font_fam, size = (font_size * ggplot2::.pt)),
-      axis.text = ggplot2::element_text(size = ggplot2::rel(1)),
+      axis.text = ggplot2::element_text(size = ggplot2::rel(1), colour = .plot_axis_text_colour),
       axis.title = ggplot2::element_blank(),
       axis.text.x = ggplot2::element_blank(),
       axis.ticks = ggplot2::element_blank(),

@@ -130,7 +130,8 @@ horizontal_bar <- function(
       plot.margin = ggplot2::margin_auto(0),
       axis.text = ggplot2::element_text(
         size = ggplot2::rel(1),
-        lineheight = .text_line_height
+        lineheight = .text_line_height,
+        colour = .plot_axis_text_colour
       ),
       axis.text.y = ggplot2::element_text(margin = ggplot2::margin(t = 0, r = 5, b = 0, l = 0)),
       axis.text.x = ggplot2::element_blank(),

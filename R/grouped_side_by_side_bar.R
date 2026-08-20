@@ -212,7 +212,11 @@ grouped_side_by_side_bar <- function(
     ggplot2::theme(
       text = ggplot2::element_text(family = font_fam, size = (font_size * ggplot2::.pt)),
       # Using ggtext element_markdown seems to be safer for setting variable label face
-      axis.text = ggtext::element_markdown(face = y_lab_face, colour = "black", size = ggplot2::rel(1)),
+      axis.text = ggtext::element_markdown(
+        face = y_lab_face,
+        colour = .plot_axis_text_colour,
+        size = ggplot2::rel(1)
+      ),
       axis.ticks = ggplot2::element_blank(),
       panel.grid = ggplot2::element_blank(),
       strip.text = ggplot2::element_text(

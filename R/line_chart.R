@@ -293,7 +293,10 @@ line_chart <- function(
     ggplot2::theme(
       text = ggplot2::element_text(family = font_fam, size = (font_size * ggplot2::.pt), lineheight = .text_line_height),
       plot.margin = ggplot2::margin(l = 5, t = 5),
-      axis.text = ggplot2::element_text(size = ggplot2::rel(1)),
+      axis.text = ggplot2::element_text(
+        size = ggplot2::rel(1),
+        colour = .plot_axis_text_colour
+      ),
       panel.grid.major.y = ggplot2::element_line(color = .plot_grid_major_colour), # set y axis lines to light grey,
       # Set x axis tick lengths
       axis.ticks.length.x = grid::unit(.3, "cm"),
