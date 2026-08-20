@@ -20,6 +20,12 @@
 #'   then ascending and default bar colours flip.
 #' @param order_by_bar Order by the left or right set of bars.
 #' @param order_descending Sort bars descending or ascending.
+#' @param panel_proportional_widths Set the widths of the left and right plots
+#'   in proportion to `chart_width`. Space needs to be left for the y-axis
+#'   labels.
+#' @param panel_axes_expansion Multiplicative axis expansion values for the
+#'   bars. Increase the first value to make more space for data labels. Increase
+#'   the 2nd value to make more space between the charts.
 #' @param left_bar_labeller,right_bar_labeller Functions, for example result of
 #'   a labeller function, which turn data numeric values into character labels.
 #'   See \link[scales]{label_percent}
@@ -39,6 +45,8 @@ side_by_side_bar <- function(
     right_bar_colour_negative = ifelse(order_descending, "#B1173B", "#28994b"),
     left_bar_labeller = label_orr_comma(),
     right_bar_labeller = label_orr_percent(),
+    panel_proportional_widths = c(0.365, 0.28),
+    panel_axes_expansion = c(0.2, 0.075),
     right_bar_order_descending = order_descending # deprecated
 ) {
   assert_chart_params(
@@ -68,6 +76,14 @@ side_by_side_bar <- function(
     assertthat::is.string(right_bar_colour_positive),
     assertthat::is.string(right_bar_colour_negative),
     msg = "left_bar_colour, right_bar_colour_positive, right_bar_colour_negative need to be colour strings of length 1"
+  )
+  assertthat::assert_that(
+    length(panel_proportional_widths) == 2,
+    sum(panel_proportional_widths) <= 1,
+    all(panel_proportional_widths >= 0)
+  )
+  assertthat::assert_that(
+    length(panel_axes_expansion) == 2
   )
 
   data <- data[, 1:3]
@@ -131,7 +147,6 @@ side_by_side_bar <- function(
   # Number of TOCs/bars
   n_tocs = dplyr::n_distinct(plot_data$toc, na.rm = TRUE)
 
-
   plt <- plot_data %>%
     ggplot2::ggplot(ggplot2::aes(stats::reorder(.data$toc, -.data$bar_order), .data$value)) +
     ggplot2::geom_col(ggplot2::aes(fill = .data$value_fill)) +
@@ -167,7 +182,7 @@ side_by_side_bar <- function(
       labeller = ggplot2::labeller(col = col_titles) # Sets chart titles
       ) +
     ggplot2::coord_flip(clip = "off") +
-    ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0.39, 0.05))) +
+    ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = panel_axes_expansion)) +
     ggplot2::scale_x_discrete(expand = ggplot2::expansion(mult = c(0,0))) +
     ggplot2::scale_fill_manual(values = bar_colour_types) +
     ggplot2::guides(fill = "none") + # No fill legend for colours
@@ -186,8 +201,9 @@ side_by_side_bar <- function(
         face = "bold",
         size = ggplot2::rel(1),
         lineheight = .text_line_height,
-        margin = ggplot2::margin(t = 0, l = 5, b = 5, r = 0) # nudge text to line up with data labels
+        margin = ggplot2::margin(t = 0, l = 0, b = 5, r = 0) # nudge text to line up with data labels
         ),
+      panel.widths = ggplot2::unit(chart_width * panel_proportional_widths, "in"),
       panel.spacing.x = ggplot2::unit(0, "lines"), # remove padding between charts so horizontal lines go full width
       plot.margin = ggplot2::margin(0,10,0,0)
     )

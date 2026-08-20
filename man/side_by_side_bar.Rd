@@ -19,6 +19,8 @@ side_by_side_bar(
   right_bar_colour_negative = ifelse(order_descending, "#B1173B", "#28994b"),
   left_bar_labeller = label_orr_comma(),
   right_bar_labeller = label_orr_percent(),
+  panel_proportional_widths = c(0.365, 0.28),
+  panel_axes_expansion = c(0.2, 0.075),
   right_bar_order_descending = order_descending
 )
 }
@@ -52,6 +54,14 @@ for green/red but could also use ORR yellow for both.}
 \item{left_bar_labeller, right_bar_labeller}{Functions, for example result of
 a labeller function, which turn data numeric values into character labels.
 See \link[scales]{label_percent}}
+
+\item{panel_proportional_widths}{Set the widths of the left and right plots
+in proportion to \code{chart_width}. Space needs to be left for the y-axis
+labels.}
+
+\item{panel_axes_expansion}{Multiplicative axis expansion values for the
+bars. Increase the first value to make more space for data labels. Increase
+the 2nd value to make more space between the charts.}
 
 \item{right_bar_order_descending}{This parameter is deprecated to allow
 sorting by left or right bar. \code{TRUE} or \code{FALSE}. If \code{TRUE} both bar charts
