@@ -1,13 +1,14 @@
 
-#' Ggplot2 to ORR PNG
+#' Ggplot2 To ORR
 #'
 #' Take a custom ggplot and apply basic ORR theme and styling, then save as a
 #' PNG file. Try to use the chart functions where ever possible but this is
 #' sometimes helpful for a bespoke chart.
 #' @inheritParams ggplot2::ggsave
 #' @inheritParams quarterly_bar
+#' @param plot A ggplot2 plot object.
 #' @export
-ggplot_to_orr_png <- function(
+ggplot_to_orr <- function(
   plot,
   filename,
   path = NULL,
