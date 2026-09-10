@@ -181,7 +181,7 @@ bar_chart <- function(
     ggplot2::scale_colour_manual(values = text_colours) +
     ggplot2::guides(colour = "none", fill = fill_legend) +
     ggplot2::theme(
-      plot.margin = ggplot2::margin_auto(0),
+      plot.margin = ggplot2::margin(l = 5, t = 5, r = 5),
       text = ggplot2::element_text(family = font_fam, size = (font_size * ggplot2::.pt)),
       axis.text = ggplot2::element_text(
         size = ggplot2::rel(1),
