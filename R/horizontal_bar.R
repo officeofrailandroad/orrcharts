@@ -77,6 +77,13 @@ horizontal_bar <- function(
 
   names(bar_colours) <- NULL
 
+  # Space between bars or groups of bars
+  ## If multiple data categories which will be dodged, increase the space to
+  ## show a greater separation.
+  bar_space_width <- dplyr::if_else(
+    data_cols > 2, 0.85, 0.99
+  )
+
   y_label_formatter <- function(x) {
     stringr::str_wrap(x, width = y_axis_label_wrap_nchar)
   }
@@ -93,9 +100,9 @@ horizontal_bar <- function(
       ggplot2::aes(
         y = .data$value
       ),
-      position = "dodge",
+      position = "dodge2",
       colour = "white", # white space between dodged bars
-      width = 0.99
+      width = bar_space_width
     ) +
     ggplot2::geom_text(
       ggplot2::aes(
