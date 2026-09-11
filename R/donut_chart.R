@@ -69,7 +69,8 @@ donut_chart <- function(
       frac_label = data_labeller(.data$value),
       label = paste(stringr::str_wrap(.data$category, 12), .data$frac_label, sep = "\n"),
       category = factor(.data$category, levels = cat_levels_order)
-    )
+    ) %>%
+    dplyr::arrange(.data$category)
 
   # Set font family and size
   font_fam <- .text_font_family
