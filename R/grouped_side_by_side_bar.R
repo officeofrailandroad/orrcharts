@@ -143,10 +143,9 @@ grouped_side_by_side_bar <- function(
   font_size <- .text_font_size
 
   # Set titles above bar columns
-  title_char_width <- 25
   col_titles <- c(
-    value = stringr::str_wrap(left_bar_title, title_char_width),
-    change = stringr::str_wrap(right_bar_title, title_char_width)
+    value = left_bar_title,
+    change = right_bar_title
   )
 
 
