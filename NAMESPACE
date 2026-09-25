@@ -2,8 +2,6 @@
 
 export("%>%")
 export(bar_chart)
-export(board_report_gb_line_chart)
-export(board_report_region_bars)
 export(donut_chart)
 export(ggplot_to_orr)
 export(grouped_side_by_side_bar)
