@@ -14,6 +14,7 @@
 #' @param outer_chart_limit The upper limit on x-axis which sets that outer size
 #'   of the chart.
 #' @param centre_label Text displayed at the centre of the chart
+#' @param seed Random seed for the label positioning algorithm
 #' @export
 donut_chart <- function(
     data,
@@ -27,7 +28,8 @@ donut_chart <- function(
     min_label_segment_length = 0.4,
     outer_chart_limit = 7,
     as_pie_chart = FALSE,
-    centre_label = ""
+    centre_label = "",
+    seed = 101
     ) {
   # Check input parameters
   assert_chart_params(
@@ -107,7 +109,8 @@ donut_chart <- function(
       lineheight = 0.25,
       nudge_x = labels_gap_size,
       point.padding = 0.1,
-      min.segment.length = min_label_segment_length
+      min.segment.length = min_label_segment_length,
+      seed = seed
     ) +
     ggplot2::annotate(
       "text",

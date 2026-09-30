@@ -16,7 +16,8 @@ donut_chart(
   min_label_segment_length = 0.4,
   outer_chart_limit = 7,
   as_pie_chart = FALSE,
-  centre_label = ""
+  centre_label = "",
+  seed = 101
 )
 }
 \arguments{
@@ -50,6 +51,8 @@ of the chart.}
 \item{as_pie_chart}{If true will remove hole in donut and show as pie chart.}
 
 \item{centre_label}{Text displayed at the centre of the chart}
+
+\item{seed}{Random seed for the label positioning algorithm}
 }
 \description{
 A simple donut chart.
