@@ -62,6 +62,8 @@ test_that(
         data_labeller = scales::label_percent(scale = 1),
         labels_gap_size = 3,
         outer_chart_limit = 8,
+        nudge_label_out = c(0, 0.3, 0),
+        nudge_label_clockwise = c(0, 0, 0.1),
         as_pie_chart = TRUE,
         centre_label = "100%"
       )
