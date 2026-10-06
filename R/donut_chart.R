@@ -8,6 +8,11 @@
 #' @param labels_gap_size Gap between the outside of the donut and the centre of
 #'   the text labels.Labels are positions using ggrepel to avoid overlaps. This
 #'   parameter sets the starting distance before the repel algorithm is run.
+#' @param nudge_label_out An array the same length as rows in data. Positive
+#'   values move single labels further out from the `labels_gap_size` value.
+#' @param nudge_label_clockwise An array the same length as rows in data.
+#'   Positive values move labels a percentage of 360 degrees clockwise from
+#'   their starting positions mid segment. Suggest values between +1 and -1.
 #' @param as_pie_chart If true will remove hole in donut and show as pie chart.
 #' @param min_label_segment_length Minimum length of line between the text label
 #'   and the edge of the segment. Hidden if smaller than this.
@@ -25,6 +30,8 @@ donut_chart <- function(
     colours = orr_colours(),
     data_labeller = scales::label_number(scale = 1, accuracy = 1),
     labels_gap_size = 2,
+    nudge_label_out = NULL,
+    nudge_label_clockwise = NULL,
     min_label_segment_length = 0.4,
     outer_chart_limit = 7,
     as_pie_chart = FALSE,
@@ -52,6 +59,10 @@ donut_chart <- function(
   )
   assertthat::assert_that(
     assertthat::is.string(centre_label)
+  )
+  assertthat::assert_that(
+    is.null(nudge_label_out) | length(nudge_label_out) == nrow(data),
+    is.null(nudge_label_clockwise) | length(nudge_label_clockwise) == nrow(data)
   )
 
   # Fix the size and names of the data
@@ -82,7 +93,19 @@ donut_chart <- function(
   donut_hole_size <- ifelse(as_pie_chart, 0.01, 2)
   donut_ring_width <- 4
 
+  ## Reset x and y if provided
+  label_start_x <- labels_gap_size
+  if(!is.null(nudge_label_out)) {
+    label_start_x <- nudge_label_out + labels_gap_size
+  }
 
+  label_start_y <- 0
+  max_y_value <- max(plot_data$ymax)
+  if(! is.null(nudge_label_clockwise)) {
+    label_start_y <- nudge_label_clockwise
+  }
+
+  # Create plot
   dplt <- plot_data %>%
     ggplot2::ggplot(
       ggplot2::aes(
@@ -107,7 +130,8 @@ donut_chart <- function(
       fontface = "bold",
       size = font_size,
       lineheight = 0.25,
-      nudge_x = labels_gap_size,
+      nudge_x = label_start_x,
+      nudge_y = label_start_y,
       point.padding = 0.1,
       min.segment.length = min_label_segment_length,
       seed = seed
@@ -124,6 +148,7 @@ donut_chart <- function(
     ) +
     ggplot2::coord_polar(theta = "y", clip = "off") +
     ggplot2::xlim(c(0, outer_chart_limit)) +
+    ggplot2::ylim(c(0,1)) +
     ggplot2::theme_minimal() +
     ggplot2::scale_fill_manual(values = colours) +
     ggplot2::scale_colour_manual(values = colours) +
